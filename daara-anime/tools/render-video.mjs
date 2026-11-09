@@ -35,6 +35,8 @@ await page.addInitScript(d => { window.__durations = d; }, durations);
 await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') });
 await page.goto(pathToFileURL(path.join(root, 'index.html')).href + `?lang=${lang}#video`);
 await page.evaluate(() => document.fonts.ready);
+// Stop natural time flow: from here the page clock only moves with runFor().
+await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 500);
 await page.clock.runFor(300);
 
 const silent = path.join(tmp, 'video.mp4');
