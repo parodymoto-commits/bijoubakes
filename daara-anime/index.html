@@ -160,6 +160,24 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
   .subtitle{display:block}
   .startbtn > span{font-size:5cqw;padding:2cqw 6cqw;gap:2cqw}.startbtn svg{width:4.5cqw;height:4.5cqw}
 }
+/* Video mode (#video): full-screen 9:16 stage for rendering an MP4. */
+.vcard{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 8%;
+  background:#111;color:#fff;font-family:var(--display);font-weight:800;font-size:9cqw;line-height:1.1;opacity:0;transition:opacity .35s;pointer-events:none}
+.vcard small{display:block;font-family:var(--body);font-weight:600;font-size:4.6cqw;opacity:.75;margin-top:2cqw}
+.vcard.on{opacity:1}
+html.video,html.video body{background:#111;overflow:hidden}
+html.video .wrap{max-width:none;padding:0;gap:0}
+html.video header,html.video .controls,html.video .chapters,html.video .note,html.video .startbtn{display:none}
+html.video .stage{aspect-ratio:auto;width:100vw;height:100vh;border-radius:0;box-shadow:none}
+html.video .board{top:6%;bottom:58%}
+html.video .char{width:40%;bottom:3%}html.video .char.boy{left:5%}html.video .char.girl{right:5%}
+html.video .emote{font-size:12cqw;top:-6%}
+html.video .stage .subtitle{display:block;position:absolute;left:4%;right:4%;top:44%;z-index:6;min-height:0;
+  background:#fff;color:#2a2118;border:.6cqw solid #2a2118;border-radius:4cqw;padding:2.6cqw 3.4cqw;font-size:4.4cqw;line-height:1.3}
+html.video .stage .subtitle .who{font-size:4cqw}
+html.video .stage .subtitle.F .who,html.video .stage .subtitle.B .who{color:#1f7a53}
+html.video .stage .subtitle.D .who{color:#8e3b6e}
+html.video .subtitle.hide{opacity:0}
 @media (prefers-reduced-motion:reduce){
   .bob,.eyes,.talking .gesture,.talking .mouth-open,.board.swap{animation:none}
 }
@@ -246,6 +264,7 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
     </div>
 
     <div class="bubble F hide" id="bubble"><span class="who" id="bwho">Fallou</span><span id="btext"></span></div>
+    <div class="vcard" id="vcard"></div>
     <button class="startbtn" id="start" type="button"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4v16l13-8z"/></svg><span id="startLabel">Guarda il cartone animato</span></span></button>
   </div>
 
@@ -566,11 +585,11 @@ const stage=$('stage'), board=$('board'), ribbon=$('ribbon'), bubble=$('bubble')
 const UI={
  it:{h1:'Il regolamento della Daara, raccontato da Fallou e Diarra',sub:'Daara Kanzoul Mouhtadine · Touba – Genova · Anno scolastico 2026/27',
    start:'Guarda il cartone animato',play:'Riproduci',pause:'Pausa',again:'Rivedi',voice:'Voce',prev:'Battuta precedente',next:'Battuta successiva',
-   welcome:'Benvenuti alla Daara',both:'Fallou e Diarra',lang:'it-IT',
+   welcome:'Benvenuti alla Daara',both:'Fallou e Diarra',lang:'it-IT',city:'Touba – Genova',rule:'Regolamento',year:'Anno scolastico 2026/27',
    note:'Voci registrate. Se l’audio non parte, tocca «Riproduci»: i browser permettono il suono solo dopo un tuo gesto.'},
  fr:{h1:'Le règlement de la Daara, raconté par Fallou et Diarra',sub:'Daara Kanzoul Mouhtadine · Touba – Gênes · Année scolaire 2026/27',
    start:'Regarder le dessin animé',play:'Lecture',pause:'Pause',again:'Revoir',voice:'Voix',prev:'Réplique précédente',next:'Réplique suivante',
-   welcome:'Bienvenue à la Daara',both:'Fallou et Diarra',lang:'fr-FR',
+   welcome:'Bienvenue à la Daara',both:'Fallou et Diarra',lang:'fr-FR',city:'Touba – Gênes',rule:'Règlement',year:'Année scolaire 2026/27',
    note:'Voix enregistrées. Si le son ne démarre pas, touchez « Lecture » : les navigateurs n’autorisent le son qu’après un geste de votre part.'}
 };
 const SCENES={it:scenes_it,fr:scenes_fr};
@@ -579,7 +598,8 @@ let scenes=SCENES[LANG], T=UI[LANG];
 const NAMES=()=>({F:'Fallou',D:'Diarra',B:T.both});
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let total = scenes.reduce((n,s)=>n+s.lines.length,0);
-const tts = 'speechSynthesis' in window ? window.speechSynthesis : null;
+const VIDEO = location.hash==='#video';
+const tts = !VIDEO && 'speechSynthesis' in window ? window.speechSynthesis : null;
 let S=0, L=0, shownScene=-1, playing=false, voiceOn=!!tts, token=0;
 
 stage.querySelector('.win.l').innerHTML = windowSvg('morning');
@@ -643,6 +663,13 @@ function playFile(src,i=0){
   });
 }
 async function speak(text,who){
+  if(VIDEO){
+    // Rendering: no sound in the page; log when each recorded line starts and wait its length.
+    const base=`audio/${LANG}/s${S}-${L}`, files=who==='B'?[base+'-F.mp3',base+'-D.mp3']:[base+'.mp3'];
+    window.__timeline.push({t:Date.now()-window.__t0,files});
+    await wait(Math.max(...files.map(f=>window.__durations[f]||2000)));
+    return true;
+  }
   if(!voiceOn) return false;
   stopAudio();
   const base=`audio/${LANG}/s${S}-${L}`;
@@ -681,8 +708,17 @@ function updateProgress(){
 async function show(opts={}){
   const my=++token;
   if(tts) tts.cancel(); stopAudio();
-  if(shownScene!==S) renderScene();
+  const newScene=shownScene!==S;
+  if(newScene) renderScene();
   const [who,text,emote]=scenes[S].lines[L];
+  if(VIDEO && newScene && !opts.still){
+    const sc=scenes[S], vc=$('vcard');
+    vc.innerHTML = sc.tag==='Intro' ? `${T.welcome}<small>Daara Kanzoul Mouhtadine · ${T.city}</small>` : `${sc.short}<small>${T.rule} · ${sc.tag}</small>`;
+    btext.textContent=stext.textContent=''; sub.classList.add('hide');
+    vc.classList.add('on'); await wait(1900); if(my!==token) return;
+    vc.classList.remove('on'); await wait(450); if(my!==token) return;
+  }
+  sub.classList.remove('hide');
   updateProgress();
   bubble.className='bubble hide '+who+(text.length>150?' small':'');
   sub.className='subtitle '+who;
@@ -711,7 +747,7 @@ async function show(opts={}){
 function advance(){
   if(L<scenes[S].lines.length-1){L++;}
   else if(S<scenes.length-1){S++;L=0;}
-  else { setPlaying(false); return; }
+  else { setPlaying(false); if(VIDEO) endVideo(); return; }
   show();
 }
 function back(){
@@ -740,6 +776,18 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='ArrowLeft'){ $('start').hidden=true; back(); }
 });
 
+async function endVideo(){
+  await wait(800);
+  const vc=$('vcard'); vc.innerHTML=`Jërëjëf!<small>Daara Kanzoul Mouhtadine · ${T.city}<br>${T.year}</small>`;
+  vc.classList.add('on'); await wait(3500); window.__done=true;
+}
+if(VIDEO){
+  document.documentElement.classList.add('video');
+  stage.appendChild(sub);
+  const q=new URLSearchParams(location.search); if(SCENES[q.get('lang')]) LANG=q.get('lang');
+  window.__timeline=[]; window.__durations=window.__durations||{};
+  window.__startVideo=()=>{ window.__t0=Date.now(); shownScene=-1; $('start').hidden=true; setPlaying(true); show(); };
+}
 applyLang(LANG);
 })();
 </script>

@@ -1,0 +1,236 @@
+<title>Kit vidéo 3D Daara</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;800&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: a production sheet. Steps first, then the two character sheets, then one card per shot in story order. */
+:root{
+  --bg:#f6efe2; --fg:#2a2118; --muted:#6e604f; --panel:#fffaf1; --line:#e3d4bb; --code:#f0e6d3;
+  --accent:#1f7a53; --accent-fg:#fff; --boy:#1f7a53; --girl:#8e3b6e;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif; --body:"Nunito","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17130f; --fg:#f3eadb; --muted:#b5a68f; --panel:#221c16; --line:#3b3127; --code:#2c241c;
+  --accent:#3fae7d; --accent-fg:#0e1a14; --boy:#5fc89a; --girl:#e08cc0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17130f; --fg:#f3eadb; --muted:#b5a68f; --panel:#221c16; --line:#3b3127; --code:#2c241c;
+  --accent:#3fae7d; --accent-fg:#0e1a14; --boy:#5fc89a; --girl:#e08cc0; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:820px;margin:0 auto;padding-block:24px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:1.45rem;line-height:1.15;margin:0 0 10px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:800;font-size:1.12rem;margin:0}
+p{margin:0}
+.lead{color:var(--muted);margin-top:6px}
+section{display:flex;flex-direction:column;gap:12px}
+ol.steps{margin:0;padding-left:1.3em;display:grid;gap:8px}
+ol.steps li::marker{font-family:var(--display);font-weight:800;color:var(--accent)}
+.tip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.tip b{color:var(--accent)}
+.prompt{position:relative;background:var(--code);border-radius:10px;padding:10px 12px 10px;font-family:var(--mono);font-size:.82rem;line-height:1.5;
+  white-space:pre-wrap;overflow-wrap:anywhere}
+.prompt .lbl{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--body);font-weight:800;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.copy{font:inherit;font-size:.78rem;letter-spacing:0;text-transform:none;font-weight:800;border:1px solid var(--line);background:var(--panel);color:var(--fg);
+  border-radius:999px;padding:4px 12px;cursor:pointer;min-height:30px}
+.copy:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.copy.ok{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card.boy h3{color:var(--boy)}.card.girl h3{color:var(--girl)}
+.chapter{font-family:var(--display);font-weight:800;color:var(--muted);font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;margin-top:8px}
+.shot-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.shot-id{font-family:var(--display);font-weight:800;background:var(--accent);color:var(--accent-fg);border-radius:8px;padding:0 8px;font-size:.9rem}
+.lines{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:.92rem}
+.lines li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline}
+.lines code{font-family:var(--mono);font-size:.75rem;color:var(--muted);background:var(--code);border-radius:6px;padding:1px 6px}
+.lines .F{color:var(--boy);font-weight:800}.lines .D{color:var(--girl);font-weight:800}.lines .B{color:var(--boy);font-weight:800}
+.shots{display:flex;flex-direction:column;gap:12px}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Kit vidéo 3D : le règlement de la Daara</h1>
+    <p class="lead">Tout pour fabriquer la version 3D avec un outil d’IA : les deux personnages, 27 plans à générer dans l’ordre, et les voix italiennes de Fallou et Diarra à poser sur chaque plan.</p>
+  </header>
+
+  <section>
+    <h2>Comment faire</h2>
+    <ol class="steps">
+      <li><b>Créez d’abord Fallou et Diarra</b> avec les deux descriptions « Personnage » ci-dessous, dans un outil d’images IA (ElevenLabs « Image et vidéo », Kling, Leonardo…). Gardez la meilleure image de chacun : c’est votre <b>image de référence</b>.</li>
+      <li><b>Pour chaque plan</b>, collez la description « Image » en ajoutant l’image de référence du ou des personnages (option « référence de personnage » ou « image de référence » de l’outil). C’est ce qui garde les mêmes visages d’un plan à l’autre.</li>
+      <li><b>Animez</b> chaque image avec la description « Mouvement » (fonction « image vers vidéo », 5 à 10 secondes).</li>
+      <li><b>Faites parler les enfants</b> : pour les plans où un enfant parle face caméra, utilisez la fonction de synchronisation des lèvres (« Lip sync ») de l’outil avec le fichier de voix indiqué.</li>
+      <li><b>Montez</b> dans CapCut : mettez les plans dans l’ordre, posez les fichiers de voix, ajoutez les sous-titres automatiques et les cartons noirs entre les chapitres (« Art. 1 · Orari »…).</li>
+    </ol>
+    <p class="tip"><b>Conseils.</b> Ne demandez pas de texte dans les images (les IA écrivent mal) : ajoutez-le au montage. Ne représentez pas Serigne Touba ni de personnes réelles. Si un visage change, régénérez avec l’image de référence plutôt que de corriger le texte.</p>
+  </section>
+
+  <section>
+    <h2>Le style, à ajouter à chaque description</h2>
+    <div class="prompt" data-copy><div class="lbl">Style commun <button class="copy" type="button">Copier</button></div><span id="style"></span></div>
+  </section>
+
+  <section>
+    <h2>Les personnages</h2>
+    <div class="chars" id="chars"></div>
+  </section>
+
+  <section>
+    <h2>Les 27 plans</h2>
+    <p class="lead" style="margin-top:-6px">Les noms de fichiers sont ceux des voix italiennes déjà générées (dossier <code>audio/it</code>).</p>
+    <div class="shots" id="shots"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+const STYLE = "3D animated family movie style, expressive cartoon characters with large eyes, soft cinematic lighting, warm colors, high detail, clean render, vertical 9:16 frame, no text, no letters, no watermark";
+const PLACE = "inside a warm Quranic school (daara) in a house in Genoa, Italy: sand-colored walls, arched windows, red patterned carpets, low wooden book stands";
+const CHARS = [
+ {cls:'boy', name:'Fallou', fr:'Garçon sénégalais de 10 ans, calotte blanche, boubou vert, pantalon long.',
+  prompt:"Character sheet of Fallou, a cheerful 10-year-old Senegalese boy, dark brown skin, short black hair, round friendly face, big expressive brown eyes, wearing a white knitted kufi prayer cap with gold embroidery, a long green kaftan tunic with gold embroidery at the collar, long navy trousers, black shoes. Full body, front view and three-quarter view, neutral light background."},
+ {cls:'girl', name:'Diarra', fr:'Fille sénégalaise de 10 ans, hijab prune, robe longue bleue, Coran vert à la main.',
+  prompt:"Character sheet of Diarra, a smart and kind 10-year-old Senegalese girl, dark brown skin, big expressive brown eyes, warm smile, wearing a plum purple hijab fully covering her hair and neck, a long modest blue dress with gold trim, holding a green Quran with gold decoration. Full body, front view and three-quarter view, neutral light background."},
+];
+const L = {
+ 's0-0':['F','Salaam aleekum! Io sono Fallou.'],'s0-1':['D','Wa aleekum salaam! E io sono Diarra. Oggi vi spieghiamo il regolamento della nostra Daara!'],
+ 's0-2':['F','La nostra scuola coranica si chiama Daara Kanzoul Mouhtadine, a Genova…'],'s0-3':['D','Qui impariamo il Sacro Corano, i valori dell’Islam…'],
+ 's0-4':['F','Studiamo nella casa di Serigne Touba, fondata da Serigne Mourtada Mbacké.'],'s0-5':['D','Qui non si impara soltanto a leggere e memorizzare il Corano…'],
+ 's0-6':['F','Il nostro motto: ogni bambino deve uscire da questa scuola con i valori dell’Islam…'],
+ 's1-0':['D','Fallou, sai quando abbiamo lezione?'],'s1-1':['F','Certo! Il sabato e la domenica. E ci sono tre gruppi.'],
+ 's1-2':['D','Il primo gruppo dalle 9 alle 12. Il secondo dalle 12 alle 15. Il terzo dalle 15 alle 18.'],'s1-3':['F','Quindi controlla bene il tuo gruppo, per non sbagliare orario!'],
+ 's2-0':['F','E se arrivo un po’ in ritardo?'],'s2-1':['D','Hai un margine massimo di 15 minuti…'],'s2-2':['F','E quanti ritardi si possono fare?'],
+ 's2-3':['D','Massimo due ritardi al mese…'],'s2-4':['F','E al terzo ritardo?'],'s2-5':['D','Lo studente viene rimandato a casa, e i genitori vengono avvisati subito.'],
+ 's2-6':['F','Capito! Mi sveglio presto e preparo lo zaino la sera prima.'],
+ 's3-0':['D','E se un giorno non puoi venire?'],'s3-1':['F','Sono i miei genitori ad avvisare la Daara…'],'s3-2':['D','E per uscire prima della fine serve l’autorizzazione dei genitori…'],
+ 's4-0':['F','Parliamo del comportamento…'],'s4-1':['D','Niente litigi, niente insulti, niente disobbedienza.'],'s4-2':['F','Quando arrivo, mi siedo al mio posto e comincio a studiare ad alta voce.'],
+ 's4-3':['D','E prima di alzarmi, chiedo sempre il permesso.'],'s4-4':['F','Per la preghiera ci si prepara con ordine e in silenzio…'],
+ 's4-5':['D','Maschi e femmine mantengono una distanza appropriata.'],'s4-6':['F','E alla fine della lezione si esce solo quando si è autorizzati.'],
+ 's5-0':['D','Attenzione: la Daara la rappresentiamo anche online!'],'s5-1':['F','Anche sui social?'],'s5-2':['D','Sì. Bisogna comportarsi in modo degno…'],
+ 's5-3':['F','E se succede di nuovo, si può essere esclusi dalla scuola…'],
+ 's6-0':['F','Ora l’abbigliamento…'],'s6-1':['D','Per le ragazze l’hijab è obbligatorio…'],'s6-2':['D','E niente unghie decorate o allungate, niente ciglia finte, niente piercing.'],
+ 's6-3':['F','Per i ragazzi: pantaloni lunghi obbligatori…'],'s6-4':['F','Niente orecchini, anche finti, e niente collane.'],'s6-5':['D','Non ci si può cambiare dentro la scuola…'],
+ 's7-0':['D','E il tuo cellulare, Fallou?'],'s7-1':['F','Spento o in silenzioso, e riposto nella borsa!'],'s7-2':['D','Bravo. Se viene usato durante la lezione, viene ritirato…'],
+ 's7-3':['F','E il materiale va trattato con cura…'],'s7-4':['D','Si riportano a casa, non si lasciano alla Daara…'],
+ 's8-0':['F','Le scarpe si lasciano in ordine, nell’apposito spazio.'],'s8-1':['D','Anche zaini e giacche, negli spazi assegnati.'],'s8-2':['F','La Daara è la casa di tutti…'],
+ 's9-0':['D','I nostri genitori vengono aggiornati regolarmente…'],'s9-1':['F','Così la scuola e la famiglia camminano insieme…'],
+ 's10-0':['F','E se qualcuno non rispetta le regole?'],'s10-1':['D','Si procede per gradi. Prima, un richiamo verbale dell’insegnante.'],'s10-2':['F','Poi, una comunicazione ai genitori.'],
+ 's10-3':['D','E per infrazioni gravi o ripetute: sospensione o espulsione.'],'s10-4':['F','Ci sono anche i compiti…'],'s10-5':['D','Chi non li fa, o non ha memorizzato bene, può essere trattenuto…'],
+ 's10-6':['F','Allora ripassiamo un pochino ogni giorno!'],
+ 's11-0':['D','I nostri genitori hanno un ruolo fondamentale…'],'s11-1':['F','Collaborano con la Daara, partecipano agli incontri…'],'s11-2':['D','Ecco, ora conoscete tutto il regolamento!'],
+ 's11-3':['F','Ci vediamo sabato alla Daara, inshallah!'],'s11-4':['B','Jërëjëf! Grazie per averci ascoltato! (fichiers s11-4-F et s11-4-D ensemble)'],
+};
+const SHOTS = [
+ ['Intro · Benvenuti','1A','Fallou et Diarra saluent',["s0-0","s0-1"],
+  `Fallou and Diarra standing side by side ${PLACE}, smiling at the camera, Fallou waving hello, medium shot`,
+  "Fallou waves and smiles, Diarra puts her hand on her heart and greets, gentle camera push-in"],
+ ['','1B','La Daara et ses élèves',["s0-2","s0-3"],
+  `Wide shot ${PLACE}, a group of children of different ages sitting on the carpet reading Quran books on low wooden stands, Fallou and Diarra in the front`,
+  "slow camera pan across the room, children gently rocking while reading aloud"],
+ ['','1C','Fallou parle de la maison',["s0-4"],
+  `Fallou standing near an arched window ${PLACE}, warm morning sunlight, speaking proudly to the camera, medium close-up`,
+  "Fallou talks to the camera with small hand gestures, sunlight flickers softly"],
+ ['','1D','Diarra et le Coran',["s0-5"],
+  `Diarra holding her green Quran against her chest ${PLACE}, gentle smile, medium close-up`,
+  "Diarra speaks calmly to the camera, slight head movement, soft light"],
+ ['','1E','La devise',["s0-6"],
+  `Fallou and Diarra side by side ${PLACE}, both smiling with a hand on the heart, golden light, medium shot`,
+  "both children smile, camera slowly pulls back"],
+ ['Art. 1 · Orari','2A','Quand a-t-on cours ?',["s1-0","s1-1"],
+  `Diarra asking Fallou a question ${PLACE}, Fallou counting on his fingers, friendly mood, medium two-shot`,
+  "Diarra asks with a curious face, Fallou answers counting on his fingers"],
+ ['','2B','Les trois groupes',["s1-2","s1-3"],
+  `Children with small backpacks arriving at the door of the daara on a sunny weekend morning, a round wall clock near the door, Fallou and Diarra in front`,
+  "children walk in calmly, the clock hands move forward quickly"],
+ ['Art. 1 · Ritardi','3A','Fallou en retard',["s2-0"],
+  `Fallou running in a street of Genoa with his backpack, worried face, morning light, full body`,
+  "Fallou runs toward the camera, slightly out of breath"],
+ ['','3B','Diarra explique les 15 minutes',["s2-1","s2-2","s2-3"],
+  `Diarra pointing at a round wall clock ${PLACE}, explaining seriously, Fallou listening, medium shot`,
+  "Diarra points at the clock and explains, Fallou nods"],
+ ['','3C','Le troisième retard',["s2-4","s2-5"],
+  `Close-up of Fallou with a surprised face, mouth open, ${PLACE}`,
+  "Fallou's eyes widen in surprise, small comic head shake"],
+ ['','3D','Le sac prêt la veille',["s2-6"],
+  `Fallou in his bedroom at night packing his backpack with a Quran book, cozy lamp light, happy`,
+  "Fallou zips the backpack and gives a thumbs up to the camera"],
+ ['Art. 1 · Assenze','4A','Les parents préviennent',["s3-0","s3-1","s3-2"],
+  `A Senegalese mother in a colorful wrap dress and head scarf making a phone call in a kitchen in the morning, Fallou standing next to her with his backpack, warm light`,
+  "the mother talks on the phone, Fallou listens and nods"],
+ ['Art. 2 · Durante lo studio','5A','On étudie à voix haute',["s4-0","s4-1","s4-2"],
+  `Children sitting in rows on the carpet ${PLACE}, reading Quran books aloud on low wooden stands, Fallou in the center`,
+  "children read aloud and gently rock, camera slowly moves forward"],
+ ['','5B','Demander la permission',["s4-3"],
+  `Diarra raising her hand politely to ask permission ${PLACE}, a kind teacher in a white boubou nodding in the background`,
+  "Diarra raises her hand, the teacher nods with a smile"],
+ ['','5C','La prière, dans l’ordre',["s4-4"],
+  `Children standing in a calm straight line on prayer rugs ${PLACE}, peaceful and silent, soft light, seen from behind`,
+  "children quietly align their rows, very calm atmosphere"],
+ ['','5D','Distance garçons et filles',["s4-5"],
+  `Wide shot ${PLACE}, boys studying on the left side and girls in hijab studying on the right side of the room, respectful atmosphere`,
+  "slow sideways camera move across the room"],
+ ['','5E','La sortie autorisée',["s4-6"],
+  `Children calmly leaving the classroom one by one at the door of the daara while the teacher gives a signal`,
+  "children walk out calmly in a line"],
+ ['Art. 2 · Social','6A','Aussi sur les réseaux',["s5-0","s5-1","s5-2","s5-3"],
+  `Diarra and Fallou sitting on a sofa at home looking at a smartphone together, thoughtful expressions, cozy living room`,
+  "Diarra shows the phone screen to Fallou, then both look at the camera seriously"],
+ ['Art. 3 · Abbigliamento','7A','Le hijab de Diarra',["s6-1","s6-2"],
+  `Diarra adjusting her plum hijab in front of a mirror at home before school, simple and modest, natural light`,
+  "Diarra gently fixes her hijab and smiles at the mirror"],
+ ['','7B','La tenue de Fallou',["s6-0","s6-3","s6-4"],
+  `Fallou sitting cross-legged on the carpet ${PLACE}, his long trousers covering his knees, smiling at the camera`,
+  "Fallou sits down cross-legged and points at his long trousers"],
+ ['','7C','Prêts à partir',["s6-5"],
+  `Fallou and Diarra at the front door of their building ready for school, dressed correctly, morning light`,
+  "both children open the door and step out"],
+ ['Art. 4 · Cellulari','8A','Téléphone éteint',["s7-0","s7-1","s7-2"],
+  `Close-up of Fallou switching off a smartphone and putting it in his backpack, Diarra watching with approval`,
+  "Fallou turns off the phone and puts it in the bag, Diarra gives a thumbs up"],
+ ['','8B','Le matériel avec soin',["s7-3","s7-4"],
+  `Diarra carefully placing a Quran book and paper lesson sheets into her school bag at home, gentle and careful`,
+  "Diarra slides the book and sheets into her bag with care"],
+ ['Art. 5 · Ordine','9A','Chaussures et sacs en ordre',["s8-0","s8-1","s8-2"],
+  `Entrance of the daara with a neat row of children's shoes on a wooden rack, backpacks and jackets on wall hooks, Fallou placing his shoes`,
+  "Fallou puts his shoes in line, Diarra hangs her jacket, everything neat"],
+ ['Art. 6 · Comunicazioni','10A','Les nouvelles aux parents',["s9-0","s9-1"],
+  `A kind teacher in a white boubou talking with Senegalese parents at the daara entrance, Fallou and Diarra standing proudly next to them`,
+  "the teacher and parents smile and shake hands, the children look proud"],
+ ['Art. 7 · Sanzioni','11A','Les étapes',["s10-0","s10-1","s10-2","s10-3"],
+  `The teacher gently raising one finger as a warning ${PLACE}, children listening attentively, Fallou and Diarra in front`,
+  "the teacher raises a finger kindly, the children nod"],
+ ['','11B','Devoirs et audios',["s10-4","s10-5","s10-6"],
+  `Fallou at home at a table recording himself reciting from a Quran book with a smartphone, Diarra studying lesson sheets next to him, evening lamp light`,
+  "Fallou recites into the phone, Diarra turns a page, both smile at the end"],
+ ['Art. 8 · Famiglie','12A','Avec nos familles',["s11-0","s11-1"],
+  `A Senegalese family at home in the evening, father and mother sitting with Fallou and Diarra reading a Quran book together, warm and loving atmosphere`,
+  "the parents listen while the children read, warm smiles"],
+ ['','12B','Au revoir !',["s11-2","s11-3","s11-4"],
+  `Fallou and Diarra at the door of the daara at sunset, waving goodbye to the camera, happy, golden light`,
+  "both children wave goodbye and smile, camera slowly pulls back"],
+];
+
+const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const block = (label, text) => `<div class="prompt" data-copy><div class="lbl">${label} <button class="copy" type="button">Copier</button></div><span>${esc(text)}</span></div>`;
+document.getElementById('style').textContent = STYLE;
+document.getElementById('chars').innerHTML = CHARS.map(c =>
+  `<div class="card ${c.cls}"><h3>${c.name}</h3><p>${c.fr}</p>${block('Personnage', c.prompt + ', ' + STYLE)}</div>`).join('');
+const who = {F:'Fallou', D:'Diarra', B:'Les deux'};
+document.getElementById('shots').innerHTML = SHOTS.map(([ch, id, title, lines, img, mov]) =>
+  (ch ? `<div class="chapter">${ch}</div>` : '') +
+  `<div class="card"><div class="shot-head"><span class="shot-id">${id}</span><h3>${title}</h3></div>
+   ${block('Image', img + ', ' + STYLE)}${block('Mouvement', mov)}
+   <ul class="lines">${lines.map(k => `<li><code>${k}.mp3</code><span><span class="${L[k][0]}">${who[L[k][0]]} :</span> ${esc(L[k][1])}</span></li>`).join('')}</ul></div>`).join('');
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.copy'); if (!b) return;
+  const text = b.closest('[data-copy]').querySelector('span').textContent;
+  const done = () => { b.textContent = 'Copié'; b.classList.add('ok'); setTimeout(() => { b.textContent = 'Copier'; b.classList.remove('ok'); }, 1500); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(b.closest('[data-copy]').querySelector('span')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Sélectionné'; };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (err) { fallback(); }
+});
+})();
+</script>
