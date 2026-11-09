@@ -25,6 +25,10 @@ body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px
   display:flex;flex-direction:column;gap:14px}
 header h1{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.1;margin:0;text-wrap:balance}
 header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
+.lang{display:inline-flex;gap:4px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--panel);margin-bottom:10px}
+.lang button{font:inherit;font-size:.85rem;font-weight:800;border:0;border-radius:999px;padding:5px 12px;background:transparent;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+.lang button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 /* ---------- STAGE (illustration: fixed colours, independent of theme) ---------- */
 .stage{position:relative;aspect-ratio:16/9;max-width:100%;container-type:inline-size;overflow:hidden;
@@ -114,10 +118,10 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
 
 .startbtn{position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(30,20,10,.25);border:0;cursor:pointer;padding:0}
 .startbtn[hidden]{display:none}
-.startbtn span{font-family:var(--display);font-weight:800;font-size:2.4cqw;background:#1f7a53;color:#fff;border-radius:4cqw;
+.startbtn > span{font-family:var(--display);font-weight:800;font-size:2.4cqw;background:#1f7a53;color:#fff;border-radius:4cqw;
   padding:1cqw 3cqw;display:flex;align-items:center;gap:1cqw;box-shadow:0 .6cqw 0 #155a3d}
 .startbtn svg{width:2.2cqw;height:2.2cqw}
-.startbtn:focus-visible span{outline:3px solid #ffe08a;outline-offset:3px}
+.startbtn:focus-visible > span{outline:3px solid #ffe08a;outline-offset:3px}
 
 /* subtitle (phones) */
 .subtitle{display:none;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-height:5.6em}
@@ -154,7 +158,7 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
   .emote{font-size:8cqw}
   .bubble{display:none}
   .subtitle{display:block}
-  .startbtn span{font-size:5cqw;padding:2cqw 6cqw;gap:2cqw}.startbtn svg{width:4.5cqw;height:4.5cqw}
+  .startbtn > span{font-size:5cqw;padding:2cqw 6cqw;gap:2cqw}.startbtn svg{width:4.5cqw;height:4.5cqw}
 }
 @media (prefers-reduced-motion:reduce){
   .bob,.eyes,.talking .gesture,.talking .mouth-open,.board.swap{animation:none}
@@ -163,8 +167,9 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
 
 <div class="wrap">
   <header>
-    <h1>Le règlement de la Daara, raconté par Fallou et Diarra</h1>
-    <p>Daara Kanzoul Mouhtadine · Touba – Gênes · Année scolaire 2026/27</p>
+    <div class="lang" role="group" aria-label="Lingua / Langue"><button type="button" data-lang="it" aria-pressed="true">Italiano</button><button type="button" data-lang="fr" aria-pressed="false">Français</button></div>
+    <h1 id="h1">Il regolamento della Daara, raccontato da Fallou e Diarra</h1>
+    <p id="hsub">Daara Kanzoul Mouhtadine · Touba – Genova · Anno scolastico 2026/27</p>
   </header>
 
   <div class="stage" id="stage">
@@ -241,22 +246,22 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
     </div>
 
     <div class="bubble F hide" id="bubble"><span class="who" id="bwho">Fallou</span><span id="btext"></span></div>
-    <button class="startbtn" id="start" type="button"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4v16l13-8z"/></svg>Regarder le dessin animé</span></button>
+    <button class="startbtn" id="start" type="button"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4v16l13-8z"/></svg><span id="startLabel">Guarda il cartone animato</span></span></button>
   </div>
 
   <div class="subtitle F" id="subtitle"><span class="who" id="swho">Fallou</span><span id="stext"></span></div>
 
   <div class="controls">
-    <button class="btn" id="prev" type="button" aria-label="Réplique précédente"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
-    <button class="btn primary" id="play" type="button"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4v16l13-8z"/></svg><span id="playLabel">Lecture</span></button>
-    <button class="btn" id="next" type="button" aria-label="Réplique suivante"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
-    <button class="btn" id="voice" type="button" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><span>Voix</span></button>
+    <button class="btn" id="prev" type="button" aria-label="Battuta precedente"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+    <button class="btn primary" id="play" type="button"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4v16l13-8z"/></svg><span id="playLabel">Riproduci</span></button>
+    <button class="btn" id="next" type="button" aria-label="Battuta successiva"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    <button class="btn" id="voice" type="button" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><span id="voiceLabel">Voce</span></button>
     <div class="progress" aria-hidden="true"><i id="bar"></i></div>
     <span class="count" id="count"></span>
   </div>
 
   <ol class="chapters" id="chapters"></ol>
-  <p class="note">Voix enregistrées. Si le son ne démarre pas, touchez « Lecture » : les navigateurs n’autorisent le son qu’après un geste de votre part.</p>
+  <p class="note" id="note">Voix enregistrées. Si le son ne démarre pas, touchez « Lecture » : les navigateurs n’autorisent le son qu’après un geste de votre part.</p>
 </div>
 
 <script>
@@ -272,7 +277,7 @@ const windowSvg = sky => `<svg viewBox="0 0 100 160" preserveAspectRatio="xMidYM
 </svg>`;
 
 const D = 'D', F = 'F', B = 'B';
-const scenes = [
+const scenes_fr = [
  {short:'Bienvenue', tag:'Intro', sky:'morning',
   board:`<p class="b-ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
    <p class="b-title">Daara Kanzoul Mouhtadine</p><p class="b-sub">Touba – Gênes · École coranique · 2026/27</p>
@@ -413,13 +418,167 @@ const scenes = [
    [B,'Jërëjëf ! Merci de nous avoir écoutés !'],
   ]},
 ];
+const scenes_it = [
+ {short:'Benvenuti', tag:'Intro', sky:'morning',
+  board:`<p class="b-ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+   <p class="b-title">Daara Kanzoul Mouhtadine</p><p class="b-sub">Touba – Genova · Scuola coranica · 2026/27</p>
+   <div class="b-grid" style="--n:3"><div class="b-card"><b>Corano</b>leggere e memorizzare</div><div class="b-card"><b>Valori</b>dell’Islam</div><div class="b-card"><b>Cultura</b>d’origine</div></div>`,
+  lines:[
+   [F,'Salaam aleekum! Io sono Fallou.','!'],
+   [D,'Wa aleekum salaam! E io sono Diarra. Oggi vi spieghiamo il regolamento della nostra Daara!'],
+   [F,'La nostra scuola coranica si chiama Daara Kanzoul Mouhtadine, a Genova. È per i bambini nati o cresciuti in Italia.'],
+   [D,'Qui impariamo il Sacro Corano, i valori dell’Islam, i diritti e i doveri del musulmano… e anche la nostra cultura d’origine.'],
+   [F,'Studiamo nella casa di Serigne Touba, fondata da Serigne Mourtada Mbacké.'],
+   [D,'Qui non si impara soltanto a leggere e memorizzare il Corano. Si imparano anche il comportamento, la dignità e il rispetto.'],
+   [F,'Il nostro motto: ogni bambino deve uscire da questa scuola con i valori dell’Islam e del proprio lignaggio spirituale, per viverli ovunque si trovi!'],
+  ]},
+ {short:'Orari', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">Sabato e domenica</p><p class="b-sub">Tre gruppi, tre ore ciascuno</p>
+   <div class="b-grid" style="--n:3"><div class="b-card">Primo gruppo<b>9:00 – 12:00</b></div><div class="b-card">Secondo gruppo<b>12:00 – 15:00</b></div><div class="b-card">Terzo gruppo<b>15:00 – 18:00</b></div></div>`,
+  lines:[
+   [D,'Fallou, sai quando abbiamo lezione?','?'],
+   [F,'Certo! Il sabato e la domenica. E ci sono tre gruppi.'],
+   [D,'Il primo gruppo dalle 9 alle 12. Il secondo dalle 12 alle 15. Il terzo dalle 15 alle 18.'],
+   [F,'Quindi controlla bene il tuo gruppo, per non sbagliare orario!'],
+  ]},
+ {short:'Ritardi', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">I ritardi</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>15 min</b>al massimo. Oltre: solo se i genitori hanno avvisato prima.</div><div class="b-card"><b>2 ritardi</b>al massimo al mese</div></div>
+   <p class="b-sub">8 giorni di lezione al mese</p>
+   <div class="cal"><span class="late">1</span><span class="late">2</span><span class="stop">3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+   <p class="b-sub">Al 3° ritardo: a casa, genitori avvisati subito</p>`,
+  lines:[
+   [F,'E se arrivo un po’ in ritardo?','?'],
+   [D,'Hai un margine massimo di 15 minuti. Oltre questo limite entri solo se i tuoi genitori hanno avvisato la Daara in anticipo.'],
+   [F,'E quanti ritardi si possono fare?'],
+   [D,'Massimo due ritardi al mese. Le lezioni sono solo 8 giorni al mese: ogni lezione conta!'],
+   [F,'E al terzo ritardo?','!'],
+   [D,'Lo studente viene rimandato a casa, e i genitori vengono avvisati subito.'],
+   [F,'Capito! Mi sveglio presto e preparo lo zaino la sera prima.'],
+  ]},
+ {short:'Assenze e uscite', tag:'Art. 1', sky:'noon',
+  board:`<p class="b-title">Assenze e uscite anticipate</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Assenza</b>I genitori avvisano la Daara <u>prima</u> dell’inizio della lezione.</div>
+   <div class="b-card"><b>Uscita anticipata</b>Solo con l’autorizzazione dei genitori.</div></div>`,
+  lines:[
+   [D,'E se un giorno non puoi venire?','?'],
+   [F,'Sono i miei genitori ad avvisare la Daara. Sempre prima dell’inizio della lezione!'],
+   [D,'E per uscire prima della fine serve l’autorizzazione dei genitori. Non si va via da soli.'],
+  ]},
+ {short:'Durante lo studio', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Durante lo studio</p>
+   <ul class="b-list"><li>All’arrivo mi siedo al mio posto e studio ad alta voce.</li><li>Chiedo il permesso prima di alzarmi.</li>
+   <li>Preghiera: ci si prepara con ordine e in silenzio, poi si riprende lo studio.</li><li>Maschi e femmine mantengono una distanza appropriata.</li>
+   <li>Alla fine si esce solo quando si è autorizzati.</li></ul>
+   <ul class="b-list no"><li>Niente litigi, insulti o disobbedienza.</li></ul>`,
+  lines:[
+   [F,'Parliamo del comportamento. Alla Daara si è rispettosi e corretti in ogni momento.'],
+   [D,'Niente litigi, niente insulti, niente disobbedienza.'],
+   [F,'Quando arrivo, mi siedo al mio posto e comincio a studiare ad alta voce.'],
+   [D,'E prima di alzarmi, chiedo sempre il permesso.'],
+   [F,'Per la preghiera ci si prepara con ordine e in silenzio. Subito dopo si riprende lo studio.'],
+   [D,'Maschi e femmine mantengono una distanza appropriata.'],
+   [F,'E alla fine della lezione si esce solo quando si è autorizzati.'],
+  ]},
+ {short:'Sui social', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Anche sui social</p>
+   <svg class="icon" viewBox="0 0 60 80" aria-hidden="true"><rect x="8" y="2" width="44" height="76" rx="8" fill="none" stroke="#f4f1e6" stroke-width="4"/><path d="M30 52 C12 40 18 26 30 34 C42 26 48 40 30 52Z" fill="#ffe08a"/></svg>
+   <p class="b-sub">Ogni studente rappresenta la Daara, anche online.<br>Comportamenti scorretti: segnalati ai genitori. Se ripetuti: possibile esclusione.</p>`,
+  lines:[
+   [D,'Attenzione: la Daara la rappresentiamo anche online!','!'],
+   [F,'Anche sui social?','?'],
+   [D,'Sì. Bisogna comportarsi in modo degno. Altrimenti viene segnalato ai genitori.'],
+   [F,'E se succede di nuovo, si può essere esclusi dalla scuola. Starò attento a quello che pubblico.'],
+  ]},
+ {short:'Abbigliamento', tag:'Art. 3', sky:'noon',
+  board:`<p class="b-title">Abbigliamento sobrio e conforme all’Islam</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Ragazze</b>Hijab obbligatorio.<br>Niente unghie decorate o allungate, ciglia finte, piercing.</div>
+   <div class="b-card"><b>Ragazzi</b>Pantaloni lunghi, ginocchia coperte anche da seduti.<br>Niente orecchini (anche finti) né collane.</div></div>
+   <p class="b-sub">Non ci si cambia alla Daara. Abbigliamento non conforme: si torna a casa.</p>`,
+  lines:[
+   [F,'Ora l’abbigliamento. Deve essere sobrio e conforme ai principi islamici.'],
+   [D,'Per le ragazze l’hijab è obbligatorio. Non si entra con il capo scoperto.'],
+   [D,'E niente unghie decorate o allungate, niente ciglia finte, niente piercing.'],
+   [F,'Per i ragazzi: pantaloni lunghi obbligatori, niente pantaloncini. Devono coprire le ginocchia anche da seduti.'],
+   [F,'Niente orecchini, anche finti, e niente collane.'],
+   [D,'Non ci si può cambiare dentro la scuola. Chi non rispetta queste indicazioni viene rimandato a casa.'],
+  ]},
+ {short:'Cellulari e materiale', tag:'Art. 4', sky:'noon',
+  board:`<p class="b-title">Cellulari e materiale</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Cellulare</b>Spento o in silenzioso, nella borsa. Se usato a lezione: ritirato e restituito ai genitori.</div>
+   <div class="b-card"><b>Alxouran e Xam Xam</b>Libri e fogli trattati con cura e riportati a casa.</div></div>
+   <p class="b-sub">Materiale trattato male o dimenticato: segnalato ai genitori.</p>`,
+  lines:[
+   [D,'E il tuo cellulare, Fallou?','?'],
+   [F,'Spento o in silenzioso, e riposto nella borsa!'],
+   [D,'Bravo. Se viene usato durante la lezione, viene ritirato e restituito soltanto ai genitori.'],
+   [F,'E il materiale va trattato con cura: i libri di Alxouran e i fogli di Xam Xam.'],
+   [D,'Si riportano a casa, non si lasciano alla Daara. Chi li tratta male o non porta quanto richiesto viene segnalato ai genitori.'],
+  ]},
+ {short:'Ordine e pulizia', tag:'Art. 5', sky:'evening',
+  board:`<p class="b-title">Ordine e pulizia</p>
+   <svg class="icon" viewBox="0 0 120 50" aria-hidden="true" style="width:calc(var(--u)*12)"><rect x="2" y="40" width="116" height="6" rx="3" fill="#8a5a33"/>
+   <g fill="#ffe08a"><ellipse cx="18" cy="32" rx="12" ry="7"/><ellipse cx="42" cy="32" rx="12" ry="7"/></g>
+   <g fill="#9fd4b8"><ellipse cx="78" cy="32" rx="12" ry="7"/><ellipse cx="102" cy="32" rx="12" ry="7"/></g></svg>
+   <ul class="b-list"><li>Scarpe in ordine nell’apposito spazio.</li><li>Zaini e giacche negli spazi assegnati.</li><li>La Daara è la casa di tutti: ognuno la tiene pulita.</li></ul>`,
+  lines:[
+   [F,'Le scarpe si lasciano in ordine, nell’apposito spazio.'],
+   [D,'Anche zaini e giacche, negli spazi assegnati.'],
+   [F,'La Daara è la casa di tutti. Ognuno aiuta a mantenerla pulita e in ordine!'],
+  ]},
+ {short:'Notizie ai genitori', tag:'Art. 6', sky:'evening',
+  board:`<p class="b-title">Valutazioni e comunicazioni</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Progressi</b>nello studio</div><div class="b-card"><b>Comportamento</b>in classe</div></div>
+   <p class="b-sub">I genitori sono aggiornati regolarmente:<br>scuola e famiglia camminano nella stessa direzione.</p>`,
+  lines:[
+   [D,'I nostri genitori vengono aggiornati regolarmente sui nostri progressi e sul nostro comportamento.'],
+   [F,'Così la scuola e la famiglia camminano insieme, nella stessa direzione.'],
+  ]},
+ {short:'Sanzioni', tag:'Art. 7', sky:'evening',
+  board:`<p class="b-title">Se non si rispettano le regole</p>
+   <div class="steps"><div style="height:calc(var(--u)*7)"><b>1</b>Richiamo dell’insegnante</div><div style="height:calc(var(--u)*9)"><b>2</b>Comunicazione ai genitori</div><div style="height:calc(var(--u)*11)"><b>3</b>Sospensione o espulsione<br>(infrazioni gravi o ripetute)</div></div>
+   <p class="b-sub">Compiti non fatti o lezione non memorizzata: si resta finché non si recita correttamente.</p>`,
+  lines:[
+   [F,'E se qualcuno non rispetta le regole?','?'],
+   [D,'Si procede per gradi. Prima, un richiamo verbale dell’insegnante.'],
+   [F,'Poi, una comunicazione ai genitori.'],
+   [D,'E per infrazioni gravi o ripetute: sospensione o espulsione.'],
+   [F,'Ci sono anche i compiti: le lezioni di Xam Xam da studiare a casa e gli audio da inviare durante la settimana.'],
+   [D,'Chi non li fa, o non ha memorizzato bene, può essere trattenuto finché non recita correttamente tutto il materiale.','!'],
+   [F,'Allora ripassiamo un pochino ogni giorno!'],
+  ]},
+ {short:'Con le famiglie', tag:'Art. 8', sky:'evening',
+  board:`<p class="b-title">Con le famiglie</p>
+   <ul class="b-list"><li>I genitori collaborano attivamente con la Daara.</li><li>Partecipano agli incontri previsti.</li><li>A casa rafforzano i valori e gli insegnamenti.</li></ul>
+   <p class="b-sub">Daara Kanzoul Mouhtadine · Touba – Genova</p>`,
+  lines:[
+   [D,'I nostri genitori hanno un ruolo fondamentale nella nostra formazione.'],
+   [F,'Collaborano con la Daara, partecipano agli incontri, e a casa rafforzano quello che impariamo a lezione.'],
+   [D,'Ecco, ora conoscete tutto il regolamento!','!'],
+   [F,'Ci vediamo sabato alla Daara, inshallah!'],
+   [B,'Jërëjëf! Grazie per averci ascoltato!'],
+  ]},
+];
 
 const $ = id => document.getElementById(id);
 const stage=$('stage'), board=$('board'), ribbon=$('ribbon'), bubble=$('bubble'), btext=$('btext'), bwho=$('bwho'),
       sub=$('subtitle'), stext=$('stext'), swho=$('swho'), boy=$('boy'), girl=$('girl'), bar=$('bar'), count=$('count');
-const NAMES={F:'Fallou',D:'Diarra',B:'Fallou et Diarra'};
+const UI={
+ it:{h1:'Il regolamento della Daara, raccontato da Fallou e Diarra',sub:'Daara Kanzoul Mouhtadine · Touba – Genova · Anno scolastico 2026/27',
+   start:'Guarda il cartone animato',play:'Riproduci',pause:'Pausa',again:'Rivedi',voice:'Voce',prev:'Battuta precedente',next:'Battuta successiva',
+   welcome:'Benvenuti alla Daara',both:'Fallou e Diarra',lang:'it-IT',
+   note:'Voci registrate. Se l’audio non parte, tocca «Riproduci»: i browser permettono il suono solo dopo un tuo gesto.'},
+ fr:{h1:'Le règlement de la Daara, raconté par Fallou et Diarra',sub:'Daara Kanzoul Mouhtadine · Touba – Gênes · Année scolaire 2026/27',
+   start:'Regarder le dessin animé',play:'Lecture',pause:'Pause',again:'Revoir',voice:'Voix',prev:'Réplique précédente',next:'Réplique suivante',
+   welcome:'Bienvenue à la Daara',both:'Fallou et Diarra',lang:'fr-FR',
+   note:'Voix enregistrées. Si le son ne démarre pas, touchez « Lecture » : les navigateurs n’autorisent le son qu’après un geste de votre part.'}
+};
+const SCENES={it:scenes_it,fr:scenes_fr};
+let LANG='it'; try{ const l=localStorage.getItem('daara-lang'); if(l&&SCENES[l]) LANG=l; }catch(e){}
+let scenes=SCENES[LANG], T=UI[LANG];
+const NAMES=()=>({F:'Fallou',D:'Diarra',B:T.both});
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const total = scenes.reduce((n,s)=>n+s.lines.length,0);
+let total = scenes.reduce((n,s)=>n+s.lines.length,0);
 const tts = 'speechSynthesis' in window ? window.speechSynthesis : null;
 let S=0, L=0, shownScene=-1, playing=false, voiceOn=!!tts, token=0;
 
@@ -428,20 +587,34 @@ stage.querySelector('.win.r').innerHTML = windowSvg('morning');
 
 // chapters
 const chList=$('chapters');
-scenes.forEach((s,i)=>{
-  const li=document.createElement('li');
-  li.innerHTML=`<button class="chip" type="button" id="ch${i}"><small>${s.tag}</small><span>${s.short}</span></button>`;
-  li.firstChild.addEventListener('click',()=>{S=i;L=0;show();});
-  chList.appendChild(li);
-});
+function buildChapters(){
+  chList.innerHTML='';
+  scenes.forEach((s,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<button class="chip" type="button" id="ch${i}"><small>${s.tag}</small><span>${s.short}</span></button>`;
+    li.firstChild.addEventListener('click',()=>{ $('start').hidden=true; S=i;L=0;show();});
+    chList.appendChild(li);
+  });
+}
+function applyLang(l){
+  LANG=l; scenes=SCENES[l]; T=UI[l]; total=scenes.reduce((n,s)=>n+s.lines.length,0);
+  try{ localStorage.setItem('daara-lang',l); }catch(e){}
+  document.documentElement.lang=l;
+  $('h1').textContent=T.h1; $('hsub').textContent=T.sub; $('startLabel').textContent=T.start; $('voiceLabel').textContent=T.voice;
+  $('note').textContent=T.note; $('prev').setAttribute('aria-label',T.prev); $('next').setAttribute('aria-label',T.next);
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.lang===l));
+  if(playing) setPlaying(false); else $('playLabel').textContent=T.play;
+  S=0; L=0; shownScene=-1; buildChapters(); pickVoice(); show({still:true});
+}
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.lang!==LANG) applyLang(b.dataset.lang); }));
 
 let frVoice=null;
-function pickVoice(){ if(!tts) return; const v=tts.getVoices().filter(v=>/^fr/i.test(v.lang)); frVoice=v.find(x=>/fr-FR/i.test(x.lang))||v[0]||null; }
+function pickVoice(){ if(!tts) return; const v=tts.getVoices().filter(v=>v.lang.toLowerCase().startsWith(LANG)); frVoice=v.find(x=>x.lang===T.lang||x.lang===T.lang.replace('-','_'))||v[0]||null; }
 if(tts){ pickVoice(); tts.onvoiceschanged=pickVoice; }
 
 function renderScene(){
   const s=scenes[S];
-  ribbon.textContent = s.tag==='Intro' ? 'Bienvenue à la Daara' : `${s.tag} · ${s.short}`;
+  ribbon.textContent = s.tag==='Intro' ? T.welcome : `${s.tag} · ${s.short}`;
   board.innerHTML=s.board;
   board.classList.remove('swap'); void board.offsetWidth; board.classList.add('swap');
   stage.querySelectorAll('.win').forEach(w=>w.innerHTML=windowSvg(s.sky));
@@ -449,7 +622,7 @@ function renderScene(){
   shownScene=S;
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-// Recorded voices: audio/s{scene}-{line}.mp3 (both children: -F and -D files played together).
+// Recorded voices: audio/{lang}/s{scene}-{line}.mp3 (both children: -F and -D files played together).
 let current=[];
 function stopAudio(){ current.forEach(a=>{a.pause();a.src='';}); current=[]; }
 function playFile(src){
@@ -462,7 +635,7 @@ function playFile(src){
 async function speak(text,who){
   if(!voiceOn) return false;
   stopAudio();
-  const base=`audio/s${S}-${L}`;
+  const base=`audio/${LANG}/s${S}-${L}`;
   try{
     if(who==='B') await Promise.all([playFile(base+'-F.mp3'),playFile(base+'-D.mp3')]);
     else await playFile(base+'.mp3');
@@ -474,7 +647,7 @@ function speakSynth(text,who){
     if(!voiceOn||!tts){ return res(false); }
     tts.cancel();
     const u=new SpeechSynthesisUtterance(text.replace(/Jërëjëf/g,'Diéré-diéf').replace(/Xam Xam/g,'Ram Ram'));
-    u.lang='fr-FR'; if(frVoice) u.voice=frVoice;
+    u.lang=T.lang; if(frVoice) u.voice=frVoice;
     u.pitch = who==='D'?1.6:who==='F'?1.25:1.4; u.rate=0.98;
     let done=false; const fin=()=>{ if(!done){done=true;res(true);} };
     u.onend=fin; u.onerror=fin;
@@ -503,7 +676,7 @@ async function show(opts={}){
   updateProgress();
   bubble.className='bubble hide '+who+(text.length>150?' small':'');
   sub.className='subtitle '+who;
-  bwho.textContent=swho.textContent=NAMES[who];
+  bwho.textContent=swho.textContent=NAMES()[who];
   setEmote(who,emote);
   if(opts.still){ btext.textContent=stext.textContent=text; bubble.classList.remove('hide'); return; }
   await wait(60); if(my!==token) return;
@@ -536,7 +709,7 @@ function back(){
 }
 function setPlaying(p){
   playing=p;
-  $('playLabel').textContent=p?'Pause':(S===scenes.length-1&&L===scenes[S].lines.length-1?'Revoir':'Lecture');
+  $('playLabel').textContent=p?T.pause:(S===scenes.length-1&&L===scenes[S].lines.length-1?T.again:T.play);
   $('playIcon').innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';
   if(!p){ token++; if(tts) tts.cancel(); stopAudio(); setTalking('',false); }
 }
@@ -556,6 +729,6 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='ArrowLeft'){ $('start').hidden=true; back(); }
 });
 
-show({still:true});
+applyLang(LANG);
 })();
 </script>
