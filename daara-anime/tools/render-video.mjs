@@ -1,5 +1,6 @@
 // Renders the cartoon to a vertical 1080x1920 MP4 with the recorded voices.
-// Usage: node tools/render-video.mjs [it|fr] [--seconds N] [--out file.mp4]
+// Usage: node tools/render-video.mjs [it|fr] [--seconds N] [--out file.mp4] [--page video.html]
+// Build video.html first with: python3 tools/build-video-page.py
 // Needs: playwright (Chromium) and ffmpeg/ffprobe on PATH.
 // The page runs in its #video mode on a virtual clock, so every frame is captured
 // at an exact time; CSS animations are stepped by hand to stay in sync.
@@ -33,7 +34,8 @@ const page = await browser.newPage({ viewport: { width: 540, height: 960 }, devi
 page.on('pageerror', e => console.error('page error:', e.message));
 await page.addInitScript(d => { window.__durations = d; }, durations);
 await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') });
-await page.goto(pathToFileURL(path.join(root, 'index.html')).href + `?lang=${lang}#video`);
+const pageFile = opt('--page', 'video.html');
+await page.goto(pathToFileURL(path.join(root, pageFile)).href + `?lang=${lang}#video`);
 await page.evaluate(() => document.fonts.ready);
 // Stop natural time flow: from here the page clock only moves with runFor().
 await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 500);
@@ -77,6 +79,7 @@ for (const ev of timeline) for (const f of ev.files) {
   filters.push(`[${n + 1}:a]aresample=44100,adelay=${ev.t}|${ev.t}[a${n}]`);
   n++;
 }
+if (n === 0) { inputs.push('-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo'); filters.push('[1:a]anull[a0]'); n = 1; }
 const mix = `${filters.join(';')};${Array.from({ length: n }, (_, i) => `[a${i}]`).join('')}amix=inputs=${n}:normalize=0:duration=longest,apad[aout]`;
 execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', silent, ...inputs, '-filter_complex', mix, '-map', '0:v', '-map', '[aout]',
   '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(total), '-movflags', '+faststart', out]);

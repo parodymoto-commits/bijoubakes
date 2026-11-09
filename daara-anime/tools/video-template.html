@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=540,height=960">
+<title>Daara video</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Video-only stage, 540x960 CSS px rendered at 2x = 1080x1920.
+   Layers: daara background (camera moves) / foreground speaker / headline / subtitle / title card. */
+:root{--ink:#21160e;--display:"Baloo 2","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:540px;height:960px;overflow:hidden;background:#111}
+#stage{position:relative;width:540px;height:960px;overflow:hidden}
+#bg{position:absolute;inset:0;transform-origin:50% 60%}
+#bg svg{width:100%;height:100%;display:block}
+#bg.blur svg{filter:blur(2.2px) saturate(1.05)}
+#bg.cam{animation:cam 7s linear both}
+@keyframes cam{from{transform:translate(var(--x0,0),0) scale(var(--s0,1.08))}to{transform:translate(var(--x1,0),0) scale(var(--s1,1.12))}}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 80% at 50% 55%,transparent 55%,rgba(20,10,0,.35))}
+
+/* background pupils */
+.kid{animation:rock var(--d,2s) ease-in-out infinite;animation-delay:var(--dl,0s);transform-box:fill-box;transform-origin:50% 100%}
+@keyframes rock{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.kid .khead{animation:chat var(--cd,3s) ease-in-out infinite;animation-delay:var(--dl,0s);transform-box:fill-box;transform-origin:50% 100%}
+.kid.still .khead{animation:none}
+@keyframes chat{0%,60%,100%{transform:translateX(0) rotate(0)}70%,90%{transform:translateX(var(--tx,4px)) rotate(var(--tr,8deg))}}
+.lamp{animation:glow 3s ease-in-out infinite alternate}
+@keyframes glow{from{opacity:.55}to{opacity:.9}}
+
+/* foreground characters */
+.char{position:absolute;bottom:-4%;width:64%;left:18%;display:none}
+.char.on{display:block}
+.char svg{width:100%;height:auto;display:block;overflow:visible}
+.char svg :is(path,rect,ellipse,circle):not(.no){stroke:var(--ink);stroke-width:2.6;paint-order:stroke;stroke-linejoin:round}
+.char svg path[fill="none"]{stroke-width:inherit}
+.shot-m .char.on{width:64%;left:18%;bottom:-4%}
+.shot-c .char.on{width:92%;left:4%;bottom:-36%}
+.shot-two .char.on{width:50%;bottom:-3%}
+.shot-two #boy{left:1%}.shot-two #girl{left:49%}
+.bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1%)}}
+.eyes{animation:blink 4.5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.mouth-open{display:none}
+.talking .mouth-closed{display:none}
+.talking .mouth-open{display:inline;animation:talk .2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center top}
+@keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1.05)}}
+.gesture,.arm2{transform-box:fill-box;transform-origin:50% 6%}
+.talking .gesture{animation:wave 1.1s ease-in-out infinite}
+.talking .arm2{animation:wave2 1.7s ease-in-out infinite}
+#boy .gesture{--a:-16deg}#girl .gesture{--a:16deg}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--a))}}
+@keyframes wave2{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+.head{transform-box:fill-box;transform-origin:50% 100%}
+#girl .head{transform-box:view-box;transform-origin:100px 185px}
+.talking .head{animation:nod 1.3s ease-in-out infinite}
+@keyframes nod{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg) translateY(-1%)}70%{transform:rotate(3deg)}}
+.leg{transform-box:fill-box;transform-origin:50% 0}
+.char svg.jump{animation:jump .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes jump{0%,100%{transform:translateY(0)}35%{transform:translateY(-8%) scale(1.03,.97)}60%{transform:translateY(0) scale(1.04,.94)}}
+.char.think .gesture{animation:scratch .5s ease-in-out infinite alternate}
+#boy.think .gesture{--s1:148deg;--s2:160deg}#girl.think .gesture{--s1:-148deg;--s2:-160deg}
+@keyframes scratch{from{transform:rotate(var(--s1))}to{transform:rotate(var(--s2))}}
+.char.bye .gesture{animation:bye .45s ease-in-out infinite alternate}
+#boy.bye .gesture{--b1:-140deg;--b2:-170deg}#girl.bye .gesture{--b1:140deg;--b2:170deg}
+@keyframes bye{from{transform:rotate(var(--b1))}to{transform:rotate(var(--b2))}}
+.emote{position:absolute;left:50%;top:-7%;transform:translateX(-50%) scale(0);font-family:var(--display);font-weight:800;
+  font-size:64px;line-height:1;color:#e0473a;-webkit-text-stroke:3px #fff;paint-order:stroke;transition:transform .25s cubic-bezier(.3,1.8,.6,1)}
+.emote.on{transform:translateX(-50%) scale(1)}
+
+/* text */
+#headline{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:84%;z-index:5;background:#fff;color:#111;border-radius:22px;
+  padding:12px 18px 10px;text-align:center;font-family:var(--display);font-weight:800;font-size:27px;line-height:1.12;text-transform:uppercase;
+  box-shadow:0 4px 0 rgba(0,0,0,.18);text-wrap:balance}
+#headline.hide{opacity:0}
+#sub{position:absolute;left:5%;right:5%;bottom:58px;z-index:6;text-align:center;font-family:var(--display);font-weight:800;font-size:27px;line-height:1.18;
+  color:#fff;-webkit-text-stroke:5px #111;paint-order:stroke fill;text-wrap:balance}
+#sub .who{display:block;font-size:19px;margin-bottom:2px;-webkit-text-stroke:4px #111}
+#sub.F .who,#sub.B .who{color:#7fe0ad}#sub.D .who{color:#f7a6d6}
+#card{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 40px;
+  background:#000;color:#fff;font-family:var(--display);font-weight:800;font-size:46px;line-height:1.1;opacity:0;transition:opacity .35s}
+#card small{font-weight:600;font-size:22px;opacity:.75;margin-top:12px}
+#card.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><svg id="bgsvg" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice"></svg></div>
+  <div class="vignette"></div>
+  <div class="char" id="boy"><div class="emote"></div>{{BOY}}</div>
+  <div class="char" id="girl"><div class="emote"></div>{{GIRL}}</div>
+  <div id="headline" class="hide"></div>
+  <div id="sub"></div>
+  <div id="card"></div>
+</div>
+<script>
+const D='D', F='F', B='B';
+{{SCENES}}
+const HEAD = [
+  'Benvenuti alla Daara Kanzoul Mouhtadine!',
+  'Sabato e domenica: 9–12 · 12–15 · 15–18',
+  'Massimo 15 minuti e 2 ritardi al mese!',
+  'Assenze? Avvisano i genitori, prima!',
+  'In classe: rispetto, ordine e studio',
+  'La Daara si rappresenta anche online',
+  'Abbigliamento sobrio e conforme all’Islam',
+  'Cellulare spento, materiale con cura',
+  'La Daara è la casa di tutti',
+  'Scuola e famiglia, insieme',
+  'Richiamo, genitori, sospensione',
+  'I genitori collaborano con la Daara',
+];
+const scenes = scenes_it;
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const NAMES = {F:'Fallou', D:'Diarra', B:'Fallou e Diarra'};
+
+/* ---------- background: a daara inside a mosque ---------- */
+function rnd(seed){ let s=seed; return ()=>{ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+function kid(x,y,sc,girl,r,idx){
+  const skins=['#7a4a2b','#6e4127','#8a5634','#5e3720','#9a6440'], robes=girl?['#2f6f9a','#7b4a9a','#2e8b62','#b2453f','#3a5a8c']:['#f3f0e8','#2e8b62','#e0b64a','#4d7fb0','#c9c2b0'];
+  const hij=['#8e3b6e','#3a3f7a','#1f6e5a','#c2563b','#5b2d6e'];
+  const skin=skins[Math.floor(r()*skins.length)], robe=robes[Math.floor(r()*robes.length)], hcol=hij[Math.floor(r()*hij.length)];
+  const d=(1.6+r()*1.2).toFixed(2), dl=(-r()*3).toFixed(2), cd=(2.5+r()*3).toFixed(2), tx=(idx%2?5:-5), tr=(idx%2?9:-9);
+  const still = r()<0.4 ? ' still':'';
+  const head = girl
+    ? `<path d="M-34 -100 C-38 -160 38 -160 34 -100 Q36 -70 26 -62 L-26 -62 Q-36 -70 -34 -100Z" fill="${hcol}"/><ellipse cx="0" cy="-118" rx="20" ry="22" fill="${skin}"/><path d="M-22 -122 C-20 -148 20 -148 22 -122 C14 -138 -14 -138 -22 -122Z" fill="${hcol}"/>`
+    : `<circle cx="0" cy="-118" r="25" fill="${skin}"/><path d="M-24 -126 C-22 -150 22 -150 24 -126 Q0 -132 -24 -126Z" fill="#fbfaf5"/>`;
+  return `<g transform="translate(${x} ${y}) scale(${sc})"><g class="kid${still}" style="--d:${d}s;--dl:${dl}s;--cd:${cd}s;--tx:${tx}px;--tr:${tr}deg">
+    <ellipse cx="0" cy="-6" rx="60" ry="16" fill="${girl?robe:'#2b3550'}" stroke="#21160e" stroke-width="3"/>
+    <path d="M-34 -92 Q0 -104 34 -92 L46 -12 Q0 -2 -46 -12Z" fill="${robe}" stroke="#21160e" stroke-width="3"/>
+    <g class="khead" stroke="#21160e" stroke-width="3">${head}<circle cx="-7" cy="-118" r="2.6" fill="#21160e" stroke="none"/><circle cx="7" cy="-118" r="2.6" fill="#21160e" stroke="none"/></g>
+    <path d="M-30 -10 L30 -48 M30 -10 L-30 -48" stroke="#7a4b26" stroke-width="7" stroke-linecap="round"/>
+    <path d="M-34 -50 L0 -44 L0 -64 L-30 -70Z M34 -50 L0 -44 L0 -64 L30 -70Z" fill="#fffdf6" stroke="#21160e" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="-26" cy="-58" r="7" fill="${skin}" stroke="#21160e" stroke-width="2.5"/><circle cx="26" cy="-58" r="7" fill="${skin}" stroke="#21160e" stroke-width="2.5"/>
+  </g></g>`;
+}
+function buildBackground(){
+  const r=rnd(42); let s='';
+  s+=`<defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6ead2"/><stop offset="1" stop-color="#e5cfa3"/></linearGradient>
+    <linearGradient id="arch" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdb385"/><stop offset="1" stop-color="#b8996a"/></linearGradient>
+    <radialGradient id="lampglow"><stop offset="0" stop-color="#ffe7a0" stop-opacity=".9"/><stop offset="1" stop-color="#ffe7a0" stop-opacity="0"/></radialGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe6ff"/><stop offset="1" stop-color="#fff2cf"/></linearGradient>
+    <pattern id="tile" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#1f7a53"/>
+      <path d="M30 4 L38 22 L56 30 L38 38 L30 56 L22 38 L4 30 L22 22Z" fill="#2f9a6c" stroke="#d9a441" stroke-width="2"/></pattern>
+    <pattern id="frieze" width="80" height="60" patternUnits="userSpaceOnUse"><rect width="80" height="60" fill="#1f7a53"/>
+      <path d="M0 30 L20 10 L40 30 L60 10 L80 30 L60 50 L40 30 L20 50Z" fill="none" stroke="#e8c15a" stroke-width="4"/></pattern>
+    <pattern id="carpet" width="180" height="120" patternUnits="userSpaceOnUse"><rect width="180" height="120" fill="#a8323a"/>
+      <path d="M20 118 L20 50 Q90 -10 160 50 L160 118" fill="#b8434a" stroke="#e0b25a" stroke-width="4"/>
+      <path d="M90 40 L104 60 L90 80 L76 60Z" fill="#e0b25a"/><rect y="114" width="180" height="6" fill="#7d2229"/></pattern>
+  </defs>`;
+  s+=`<rect width="1080" height="1920" fill="url(#wall)"/>`;
+  s+=`<rect y="0" width="1080" height="70" fill="url(#frieze)"/><rect y="70" width="1080" height="10" fill="#d9a441"/>`;
+  // side arches with windows
+  for(const x of [40,760]){
+    s+=`<path d="M${x} 1120 V520 Q${x+140} 330 ${x+280} 520 V1120Z" fill="url(#arch)" stroke="#b38b4f" stroke-width="10"/>`;
+    s+=`<path d="M${x+50} 900 V560 Q${x+140} 440 ${x+230} 560 V900Z" fill="url(#win)" stroke="#8a5a33" stroke-width="10"/>`;
+    s+=`<path d="M${x+140} 470 V900 M${x+50} 700 H${x+230}" stroke="#8a5a33" stroke-width="8"/>`;
+  }
+  // central mihrab
+  s+=`<path d="M360 1130 V470 Q540 200 720 470 V1130Z" fill="#d9a441"/>`;
+  s+=`<path d="M385 1130 V485 Q540 250 695 485 V1130Z" fill="url(#tile)"/>`;
+  s+=`<path d="M430 1130 V560 Q540 380 650 560 V1130Z" fill="#164f37" stroke="#e8c15a" stroke-width="6"/>`;
+  s+=`<circle cx="540" cy="640" r="60" fill="none" stroke="#e8c15a" stroke-width="6"/><path d="M540 590 L552 628 L590 640 L552 652 L540 690 L528 652 L490 640 L528 628Z" fill="#e8c15a"/>`;
+  // hanging lamps
+  for(const [x,len] of [[200,280],[540,170],[880,280],[360,360],[720,360]]){
+    s+=`<line x1="${x}" y1="80" x2="${x}" y2="${80+len}" stroke="#6b4a22" stroke-width="4"/>`;
+    s+=`<circle class="lamp" cx="${x}" cy="${110+len}" r="90" fill="url(#lampglow)"/>`;
+    s+=`<path d="M${x-26} ${80+len} H${x+26} L${x+34} ${115+len} L${x} ${150+len} L${x-34} ${115+len}Z" fill="#e8b84a" stroke="#6b4a22" stroke-width="5"/>`;
+  }
+  // floor: carpet rows
+  s+=`<rect y="1120" width="1080" height="800" fill="url(#carpet)"/><rect y="1110" width="1080" height="16" fill="#7a4b26"/>`;
+  s+=`<rect y="1126" width="1080" height="800" fill="url(#shade)" opacity="0"/>`;
+  // teacher at the back, under the mihrab
+  s+=`<g transform="translate(540 1190) scale(.75)">
+      <ellipse cx="0" cy="-6" rx="78" ry="20" fill="#f3f0e8" stroke="#21160e" stroke-width="3"/>
+      <path d="M-46 -120 Q0 -136 46 -120 L62 -12 Q0 0 -62 -12Z" fill="#f3f0e8" stroke="#21160e" stroke-width="3"/>
+      <circle cx="0" cy="-152" r="30" fill="#5e3720" stroke="#21160e" stroke-width="3"/>
+      <path d="M-30 -160 C-28 -190 28 -190 30 -160 Q0 -166 -30 -160Z" fill="#fbfaf5" stroke="#21160e" stroke-width="3"/>
+      <path d="M-14 -132 Q0 -112 14 -132" fill="#e9e4d8" stroke="#21160e" stroke-width="3"/>
+      <circle cx="-9" cy="-154" r="3" fill="#21160e"/><circle cx="9" cy="-154" r="3" fill="#21160e"/>
+      <path d="M-40 -60 L40 -60 L36 -40 L-36 -40Z" fill="#1f7a53" stroke="#21160e" stroke-width="3"/></g>`;
+  // pupils: boys on the left, girls on the right, three rows
+  const rows=[[1300,.95,4,40],[1520,1.25,3,80],[1790,1.6,3,30]];
+  let idx=0;
+  for(const [y,sc,n,off] of rows){
+    const span=400, step=span/(n-1||1);
+    for(let i=0;i<n;i++){ s+=kid(off+60+i*step,y,sc,false,r,idx++); }
+    for(let i=0;i<n;i++){ s+=kid(1020-off-i*step,y,sc,true,r,idx++); }
+  }
+  $('bgsvg').innerHTML=s;
+}
+
+/* ---------- shots ---------- */
+const boy=$('boy'), girl=$('girl'), stage=$('stage'), bg=$('bg');
+function camera(kind,who){
+  bg.classList.remove('cam'); void bg.offsetWidth;
+  const v = kind==='wide' ? {x0:'0px',x1:'0px',s0:1.0,s1:1.06}
+          : who==='F' ? {x0:'40px',x1:'30px',s0:1.16,s1:1.2}
+          : who==='D' ? {x0:'-40px',x1:'-30px',s0:1.16,s1:1.2}
+          : {x0:'0px',x1:'0px',s0:1.1,s1:1.13};
+  for(const k in v) bg.style.setProperty('--'+k, v[k]);
+  bg.classList.toggle('blur', kind!=='wide');
+  bg.classList.add('cam');
+}
+function setShot(who,kind){
+  stage.classList.remove('shot-m','shot-c','shot-two');
+  boy.classList.toggle('on', who==='F'||who==='B');
+  girl.classList.toggle('on', who==='D'||who==='B');
+  if(who==='B') stage.classList.add('shot-two'); else if(who) stage.classList.add(kind==='c'?'shot-c':'shot-m');
+  camera(who?'close':'wide',who);
+}
+function setTalking(who,on){
+  boy.classList.toggle('talking', on&&(who==='F'||who==='B'));
+  girl.classList.toggle('talking', on&&(who==='D'||who==='B'));
+}
+function gesture(who,e){
+  [boy,girl].forEach(c=>{ c.classList.remove('think'); c.classList.toggle('bye', who==='B'); c.querySelector('.emote').classList.remove('on'); });
+  const c = who==='F'?boy:who==='D'?girl:null; if(!c||!e) return;
+  const em=c.querySelector('.emote'); em.textContent=e; em.classList.add('on');
+  if(e==='?') c.classList.add('think');
+  if(e==='!'){ const sv=c.querySelector('svg'); sv.classList.remove('jump'); void sv.offsetWidth; sv.classList.add('jump'); }
+}
+async function card(html,ms){ const c=$('card'); c.innerHTML=html; c.classList.add('on'); await wait(ms); c.classList.remove('on'); await wait(400); }
+
+async function run(){
+  let n=0;
+  for(let si=0; si<scenes.length; si++){
+    const sc=scenes[si];
+    $('sub').textContent=''; $('headline').classList.add('hide'); setShot(null);
+    await card(si===0 ? `Il regolamento della Daara<small>Daara Kanzoul Mouhtadine · Touba – Genova</small>` : `${sc.short}<small>Regolamento · ${sc.tag}</small>`, si===0?2600:1800);
+    $('headline').textContent=HEAD[si]; $('headline').classList.remove('hide');
+    await wait(1400); // wide shot of the class
+    for(let li=0; li<sc.lines.length; li++, n++){
+      const [who,text,emote]=sc.lines[li];
+      setShot(who, n%3===2 ? 'c' : 'm');
+      gesture(who,emote);
+      const base=`audio/it/s${si}-${li}`, files=who==='B'?[base+'-F.mp3',base+'-D.mp3']:[base+'.mp3'];
+      const dur=Math.max(...files.map(f=>window.__durations[f]||2500));
+      await wait(250);                       // cut, then speak
+      window.__timeline.push({t:Date.now()-window.__t0, files});
+      const s=$('sub'); s.className=who; s.innerHTML=`<span class="who">${NAMES[who]}</span>${text}`;
+      setTalking(who,true);
+      await wait(dur);
+      setTalking(who,false);
+      await wait(350);
+      s.textContent='';
+    }
+  }
+  setShot(null); $('headline').classList.add('hide');
+  await card(`Jërëjëf!<small>Daara Kanzoul Mouhtadine · Touba – Genova<br>Anno scolastico 2026/27</small>`, 3500);
+  window.__done=true;
+}
+buildBackground();
+setShot(null);
+window.__timeline=[]; window.__durations=window.__durations||{};
+window.__startVideo=()=>{ window.__t0=Date.now(); run(); };
+</script>
+</body>
+</html>
