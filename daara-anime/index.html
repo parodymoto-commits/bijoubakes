@@ -1,0 +1,542 @@
+<title>Fallou et Diarra à la Daara</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;800&display=swap">
+<style>
+/* Layout: one cartoon stage (16:9, 3:4 on phones) with a classroom board in the middle,
+   the two children on either side, controls and chapters underneath. */
+:root{
+  --bg:#f6efe2; --fg:#2a2118; --muted:#6e604f; --panel:#fffaf1; --line:#e3d4bb;
+  --accent:#1f7a53; --accent-fg:#ffffff; --chip:#efe3cd;
+  --boy:#1f7a53; --girl:#8e3b6e;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17130f; --fg:#f3eadb; --muted:#b5a68f; --panel:#221c16; --line:#3b3127;
+  --accent:#3fae7d; --accent-fg:#0e1a14; --chip:#2c241c; --boy:#5fc89a; --girl:#e08cc0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17130f; --fg:#f3eadb; --muted:#b5a68f; --panel:#221c16; --line:#3b3127;
+  --accent:#3fae7d; --accent-fg:#0e1a14; --chip:#2c241c; --boy:#5fc89a; --girl:#e08cc0; color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:14px}
+header h1{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.1;margin:0;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
+
+/* ---------- STAGE (illustration: fixed colours, independent of theme) ---------- */
+.stage{position:relative;aspect-ratio:16/9;max-width:100%;container-type:inline-size;overflow:hidden;
+  border-radius:18px;background:#efd9ae;box-shadow:0 10px 30px rgba(40,25,10,.18);--u:1cqw;user-select:none}
+.wall{position:absolute;inset:0 0 26% 0;background:linear-gradient(#f5e4c0,#ead19f)}
+.frieze{position:absolute;left:0;right:0;top:0;height:2.6cqw;
+  background:repeating-linear-gradient(45deg,#1f7a53 0 1cqw,#f5e4c0 1cqw 1.3cqw,#d9a441 1.3cqw 2.3cqw,#f5e4c0 2.3cqw 2.6cqw);opacity:.9}
+.floor{position:absolute;left:0;right:0;bottom:0;height:26%;
+  background:repeating-linear-gradient(90deg,#a8323a 0 7cqw,#d9a441 7cqw 7.5cqw,#8f2831 7.5cqw 8cqw,#a8323a 8cqw 15cqw);}
+.floor::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,0) 40%)}
+.win{position:absolute;top:9%;width:12%;height:36%;border-radius:50% 50% 0 0/28% 28% 0 0;overflow:hidden;
+  border:.6cqw solid #8a5a33;background:#8a5a33}
+.win svg{width:100%;height:100%;display:block}
+.win.l{left:6%}.win.r{right:6%}
+.sky-top{transition:stop-color .8s}
+.ribbon{position:absolute;left:50%;transform:translateX(-50%);top:3.2%;z-index:3;white-space:nowrap;
+  font-family:var(--display);font-weight:800;font-size:1.5cqw;color:#fff;background:#1f7a53;
+  padding:.2cqw 1.6cqw;border-radius:2cqw;box-shadow:0 .3cqw 0 #155a3d}
+
+.board{position:absolute;left:26%;right:26%;top:10%;bottom:29%;z-index:2;
+  background:#2c4a3b;border:.9cqw solid #8a5a33;border-radius:1.2cqw;
+  box-shadow:inset 0 0 3cqw rgba(0,0,0,.35),0 .6cqw 0 #6c4426;
+  color:#f4f1e6;font-family:var(--body);padding:1.4cqw 1.6cqw;display:flex;flex-direction:column;gap:calc(var(--u)*1);
+  justify-content:center;overflow:hidden}
+.board.swap{animation:boardIn .5s ease}
+@keyframes boardIn{from{transform:translateY(-4%) scale(.97);opacity:.3}to{transform:none;opacity:1}}
+.b-title{font-family:var(--display);font-weight:800;color:#ffe08a;font-size:calc(var(--u)*2.5);line-height:1.05;text-align:center;margin:0}
+.b-sub{text-align:center;font-size:calc(var(--u)*1.45);opacity:.9;margin:0}
+.b-ar{font-family:"Amiri","Traditional Arabic","Scheherazade New",serif;font-size:calc(var(--u)*3.2);text-align:center;color:#fff;line-height:1.2;margin:0}
+.b-grid{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:calc(var(--u)*.9)}
+.b-card{border:.18cqw dashed rgba(255,255,255,.55);border-radius:calc(var(--u)*1);padding:calc(var(--u)*.7);text-align:center;
+  font-size:calc(var(--u)*1.35);line-height:1.25;min-width:0}
+.b-card b{display:block;font-family:var(--display);font-size:calc(var(--u)*2.2);color:#ffe08a;line-height:1.05}
+.b-card.warn b{color:#ff9b8a}
+.b-list{margin:0;padding:0;list-style:none;display:grid;gap:calc(var(--u)*.45);font-size:calc(var(--u)*1.4);line-height:1.25}
+.b-list li{display:flex;gap:calc(var(--u)*.7);align-items:flex-start}
+.b-list li::before{content:"";flex:none;width:calc(var(--u)*1.1);height:calc(var(--u)*1.1);margin-top:calc(var(--u)*.2);
+  border:.2cqw solid #ffe08a;border-radius:50%;background:radial-gradient(#ffe08a 35%,transparent 40%)}
+.b-list.no li::before{border-color:#ff9b8a;background:linear-gradient(45deg,transparent 44%,#ff9b8a 44% 56%,transparent 56%)}
+.cal{display:grid;grid-template-columns:repeat(8,1fr);gap:calc(var(--u)*.5)}
+.cal span{aspect-ratio:1;border-radius:calc(var(--u)*.5);background:rgba(255,255,255,.14);display:grid;place-items:center;
+  font-family:var(--display);font-size:calc(var(--u)*1.5)}
+.cal .late{background:#d9a441;color:#2c2010}.cal .stop{background:#d4553f;color:#fff}
+.icon{width:calc(var(--u)*6);height:auto;display:block;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);align-items:end;gap:calc(var(--u)*.6)}
+.steps div{background:rgba(255,255,255,.12);border-top:.4cqw solid #ffe08a;border-radius:calc(var(--u)*.6) calc(var(--u)*.6) 0 0;
+  padding:calc(var(--u)*.6);text-align:center;font-size:calc(var(--u)*1.3);line-height:1.2}
+.steps div:nth-child(2){border-color:#ffb36b}.steps div:nth-child(3){border-color:#ff7d6b}
+.steps b{display:block;font-family:var(--display);font-size:calc(var(--u)*2.6);line-height:1}
+
+/* characters */
+.char{position:absolute;bottom:3%;width:18%;z-index:4}
+.char svg{width:100%;height:auto;display:block;overflow:visible}
+.char.boy{left:5%}.char.girl{right:5%}
+.bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 100%}
+.girl .bob{animation-delay:-1.6s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2%)}}
+.eyes{animation:blink 4.5s infinite;transform-box:fill-box;transform-origin:center}
+.girl .eyes{animation-delay:-2.1s}
+@keyframes blink{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.mouth-open{display:none}
+.talking .mouth-closed{display:none}
+.talking .mouth-open{display:inline;animation:talk .22s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center top}
+@keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1.05)}}
+.gesture{transform-box:fill-box;transform-origin:50% 6%}
+.talking .gesture{animation:wave 1.1s ease-in-out infinite}
+.boy .gesture{--a:-14deg}.girl .gesture{--a:14deg}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--a))}}
+.talking .bob{animation-duration:1.4s}
+.emote{position:absolute;left:50%;top:-9%;transform:translateX(-50%) scale(0);font-family:var(--display);font-weight:800;
+  font-size:4.2cqw;line-height:1;color:#d4553f;text-shadow:0 .3cqw 0 #fff;transition:transform .25s cubic-bezier(.3,1.8,.6,1)}
+.emote.on{transform:translateX(-50%) scale(1)}
+
+/* speech bubble */
+.bubble{position:absolute;bottom:57%;width:24%;z-index:5;background:#fff;color:#2a2118;border-radius:1.6cqw;
+  padding:1cqw 1.2cqw 1.1cqw;font-size:1.5cqw;line-height:1.32;box-shadow:0 .5cqw 0 rgba(0,0,0,.12);border:.25cqw solid #2a2118;
+  transform-origin:var(--ox,20%) 110%;transition:transform .2s ease,opacity .2s ease}
+.bubble.hide{opacity:0;transform:scale(.6)}
+.bubble.small{font-size:1.32cqw}
+.bubble .who{display:block;font-family:var(--display);font-weight:800;font-size:1.35cqw;line-height:1.1;margin-bottom:.3cqw}
+.bubble::after{content:"";position:absolute;bottom:-1.6cqw;left:var(--tail,28%);width:2cqw;height:2cqw;background:#fff;
+  border-right:.25cqw solid #2a2118;border-bottom:.25cqw solid #2a2118;transform:skewX(var(--skew,20deg)) rotate(45deg)}
+.bubble.F{left:1.5%;--ox:30%;--tail:40%;--skew:-10deg}.bubble.F .who{color:#1f7a53}
+.bubble.D{right:1.5%;--ox:70%;--tail:55%;--skew:10deg}.bubble.D .who{color:#8e3b6e}
+.bubble.B{left:30%;width:40%;bottom:6%;text-align:center;--ox:50%;--tail:46%}.bubble.B::after{display:none}
+.bubble.B .who{color:#1f7a53}
+
+.startbtn{position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(30,20,10,.25);border:0;cursor:pointer;padding:0}
+.startbtn[hidden]{display:none}
+.startbtn span{font-family:var(--display);font-weight:800;font-size:2.4cqw;background:#1f7a53;color:#fff;border-radius:4cqw;
+  padding:1cqw 3cqw;display:flex;align-items:center;gap:1cqw;box-shadow:0 .6cqw 0 #155a3d}
+.startbtn svg{width:2.2cqw;height:2.2cqw}
+.startbtn:focus-visible span{outline:3px solid #ffe08a;outline-offset:3px}
+
+/* subtitle (phones) */
+.subtitle{display:none;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-height:5.6em}
+.subtitle .who{font-family:var(--display);font-weight:800;display:block;line-height:1.1;margin-bottom:2px}
+.subtitle.F .who,.subtitle.B .who{color:var(--boy)}.subtitle.D .who{color:var(--girl)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.btn{font:inherit;font-weight:800;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;
+  padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:42px}
+.btn svg{width:18px;height:18px;fill:currentColor}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:transparent;padding-inline:20px}
+.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn[aria-pressed="false"]{opacity:.7}
+.progress{flex:1 1 160px;min-width:0;height:8px;border-radius:8px;background:var(--chip);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+
+.chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.chip{width:100%;text-align:left;font:inherit;font-size:.92rem;border:1px solid var(--line);background:var(--panel);color:var(--fg);
+  border-radius:12px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline}
+.chip small{font-family:var(--display);font-weight:800;color:var(--muted);min-width:3.2em;font-size:.8rem;letter-spacing:.03em}
+.chip[aria-current="true"]{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.chip[aria-current="true"] small{color:inherit;opacity:.85}
+.note{color:var(--muted);font-size:.85rem;margin:0}
+
+@media (max-width:640px){
+  .stage{aspect-ratio:3/4;--u:2.05cqw}
+  .win,.frieze{display:none}
+  .wall{inset:0 0 22% 0}.floor{height:22%}
+  .ribbon{font-size:3.2cqw;top:2%;padding:.4cqw 3cqw}
+  .board{left:4%;right:4%;top:8%;bottom:44%;padding:3cqw}
+  .char{width:30%;bottom:2%}.char.boy{left:6%}.char.girl{right:6%}
+  .emote{font-size:8cqw}
+  .bubble{display:none}
+  .subtitle{display:block}
+  .startbtn span{font-size:5cqw;padding:2cqw 6cqw;gap:2cqw}.startbtn svg{width:4.5cqw;height:4.5cqw}
+}
+@media (prefers-reduced-motion:reduce){
+  .bob,.eyes,.talking .gesture,.talking .mouth-open,.board.swap{animation:none}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Le règlement de la Daara, raconté par Fallou et Diarra</h1>
+    <p>Daara Kanzoul Mouhtadine · Touba – Gênes · Année scolaire 2026/27</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="wall"></div><div class="frieze"></div><div class="floor"></div>
+    <div class="win l" aria-hidden="true"></div><div class="win r" aria-hidden="true"></div>
+    <div class="ribbon" id="ribbon">Bienvenue</div>
+    <div class="board" id="board" aria-live="polite"></div>
+
+    <div class="char boy" id="boy" aria-hidden="true">
+      <div class="emote" id="emoteF"></div>
+      <svg viewBox="0 0 200 340">
+        <g class="bob">
+          <ellipse cx="100" cy="332" rx="62" ry="8" fill="rgba(0,0,0,.22)"/>
+          <rect x="72" y="238" width="25" height="86" rx="9" fill="#2b3550"/>
+          <rect x="103" y="238" width="25" height="86" rx="9" fill="#2b3550"/>
+          <ellipse cx="84" cy="326" rx="19" ry="8" fill="#3a2a20"/>
+          <ellipse cx="117" cy="326" rx="19" ry="8" fill="#3a2a20"/>
+          <g><rect x="44" y="150" width="24" height="84" rx="12" fill="#25915f"/><circle cx="56" cy="236" r="11" fill="#7a4a2b"/></g>
+          <path d="M58 152 Q100 136 142 152 L152 262 Q100 276 48 262 Z" fill="#25915f"/>
+          <path d="M84 146 L100 176 L116 146" fill="none" stroke="#e8c15a" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M100 178 L100 226" stroke="#e8c15a" stroke-width="3" stroke-dasharray="4 5"/>
+          <path d="M54 250 Q100 262 146 250" fill="none" stroke="#e8c15a" stroke-width="3"/>
+          <g class="gesture"><rect x="132" y="150" width="24" height="84" rx="12" fill="#25915f"/><circle cx="144" cy="236" r="11" fill="#7a4a2b"/></g>
+          <rect x="89" y="128" width="22" height="22" rx="6" fill="#6c3f24"/>
+          <circle cx="48" cy="98" r="10" fill="#7a4a2b"/><circle cx="152" cy="98" r="10" fill="#7a4a2b"/>
+          <circle cx="100" cy="94" r="52" fill="#7a4a2b"/>
+          <path d="M50 76 C52 34 148 34 150 76 Q100 66 50 76 Z" fill="#fbfaf5"/>
+          <path d="M56 70 Q100 60 144 70" fill="none" stroke="#d9a441" stroke-width="3"/>
+          <path d="M66 54 Q100 44 134 54" fill="none" stroke="#d9a441" stroke-width="2" stroke-dasharray="3 4"/>
+          <path d="M70 80 Q80 75 90 80 M110 80 Q120 75 130 80" fill="none" stroke="#2a1a10" stroke-width="3.5" stroke-linecap="round"/>
+          <g class="eyes">
+            <ellipse cx="80" cy="97" rx="10" ry="12" fill="#fff"/><ellipse cx="120" cy="97" rx="10" ry="12" fill="#fff"/>
+            <circle cx="83" cy="99" r="6" fill="#2a1a10"/><circle cx="123" cy="99" r="6" fill="#2a1a10"/>
+            <circle cx="85" cy="96" r="2" fill="#fff"/><circle cx="125" cy="96" r="2" fill="#fff"/>
+          </g>
+          <path d="M98 104 Q101 112 96 114" fill="none" stroke="#5a3119" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="68" cy="116" r="7" fill="#c0614a" opacity=".35"/><circle cx="132" cy="116" r="7" fill="#c0614a" opacity=".35"/>
+          <path class="mouth-closed" d="M86 122 Q100 134 114 122" fill="none" stroke="#2a1a10" stroke-width="3.5" stroke-linecap="round"/>
+          <g class="mouth-open"><ellipse cx="100" cy="126" rx="11" ry="9" fill="#5a1d1d"/><ellipse cx="100" cy="131" rx="6" ry="3.5" fill="#d9636b"/></g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="char girl" id="girl" aria-hidden="true">
+      <div class="emote" id="emoteD"></div>
+      <svg viewBox="0 0 200 340">
+        <g class="bob">
+          <ellipse cx="100" cy="332" rx="64" ry="8" fill="rgba(0,0,0,.22)"/>
+          <ellipse cx="82" cy="326" rx="17" ry="7" fill="#3a2a20"/><ellipse cx="118" cy="326" rx="17" ry="7" fill="#3a2a20"/>
+          <path d="M56 160 Q100 146 144 160 L162 320 Q100 332 38 320 Z" fill="#2f6f9a"/>
+          <path d="M60 300 Q100 310 140 300" fill="none" stroke="#e8c15a" stroke-width="3"/>
+          <g class="gesture"><rect x="44" y="158" width="24" height="82" rx="12" fill="#2f6f9a"/><circle cx="56" cy="242" r="11" fill="#6e4127"/></g>
+          <path d="M100 24 C38 24 32 92 40 132 Q46 180 72 190 L128 190 Q154 180 160 132 C168 92 162 24 100 24 Z" fill="#8e3b6e"/>
+          <path d="M70 186 Q100 200 130 186" fill="none" stroke="#6f2c55" stroke-width="3"/>
+          <g><rect x="132" y="158" width="24" height="70" rx="12" fill="#2f6f9a" transform="rotate(28 144 164)"/></g>
+          <rect x="96" y="196" width="40" height="30" rx="4" fill="#1f7a53" transform="rotate(-8 116 211)"/>
+          <rect x="102" y="201" width="28" height="20" rx="2" fill="none" stroke="#e8c15a" stroke-width="2" transform="rotate(-8 116 211)"/>
+          <circle cx="118" cy="226" r="10" fill="#6e4127"/>
+          <ellipse cx="100" cy="100" rx="40" ry="45" fill="#6e4127"/>
+          <path d="M58 92 C58 48 142 48 142 92 C132 64 68 64 58 92 Z" fill="#a24a80"/>
+          <path d="M72 84 Q81 79 90 84 M110 84 Q119 79 128 84" fill="none" stroke="#2a1a10" stroke-width="3" stroke-linecap="round"/>
+          <g class="eyes">
+            <ellipse cx="81" cy="100" rx="9.5" ry="11.5" fill="#fff"/><ellipse cx="119" cy="100" rx="9.5" ry="11.5" fill="#fff"/>
+            <circle cx="78" cy="102" r="6" fill="#2a1a10"/><circle cx="116" cy="102" r="6" fill="#2a1a10"/>
+            <circle cx="80" cy="99" r="2" fill="#fff"/><circle cx="118" cy="99" r="2" fill="#fff"/>
+            <path d="M71 92 L68 89 M91 92 L94 89 M109 92 L106 89 M129 92 L132 89" stroke="#2a1a10" stroke-width="2" stroke-linecap="round"/>
+          </g>
+          <path d="M102 107 Q99 114 104 116" fill="none" stroke="#4d2a16" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="70" cy="118" r="6.5" fill="#c0614a" opacity=".35"/><circle cx="130" cy="118" r="6.5" fill="#c0614a" opacity=".35"/>
+          <path class="mouth-closed" d="M88 125 Q100 135 112 125" fill="none" stroke="#2a1a10" stroke-width="3.2" stroke-linecap="round"/>
+          <g class="mouth-open"><ellipse cx="100" cy="128" rx="10" ry="8.5" fill="#5a1d1d"/><ellipse cx="100" cy="132.5" rx="5.5" ry="3.2" fill="#d9636b"/></g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="bubble F hide" id="bubble"><span class="who" id="bwho">Fallou</span><span id="btext"></span></div>
+    <button class="startbtn" id="start" type="button"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4v16l13-8z"/></svg>Regarder le dessin animé</span></button>
+  </div>
+
+  <div class="subtitle F" id="subtitle"><span class="who" id="swho">Fallou</span><span id="stext"></span></div>
+
+  <div class="controls">
+    <button class="btn" id="prev" type="button" aria-label="Réplique précédente"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+    <button class="btn primary" id="play" type="button"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4v16l13-8z"/></svg><span id="playLabel">Lecture</span></button>
+    <button class="btn" id="next" type="button" aria-label="Réplique suivante"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    <button class="btn" id="voice" type="button" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><span>Voix</span></button>
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    <span class="count" id="count"></span>
+  </div>
+
+  <ol class="chapters" id="chapters"></ol>
+  <p class="note">Les voix utilisent la synthèse vocale française de votre appareil. Sans voix, les répliques défilent seules au rythme de la lecture.</p>
+</div>
+
+<script>
+(function(){
+const windowSvg = sky => `<svg viewBox="0 0 100 160" preserveAspectRatio="xMidYMax slice">
+  <defs><linearGradient id="sk${sky}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${{morning:'#8fd0f2',noon:'#5fb4ea',evening:'#f08a5d'}[sky]}"/>
+    <stop offset="1" stop-color="${{morning:'#ffe6b0',noon:'#cfeeff',evening:'#ffd08a'}[sky]}"/></linearGradient></defs>
+  <rect width="100" height="160" fill="url(#sk${sky})"/>
+  <circle cx="${sky==='evening'?30:70}" cy="${sky==='noon'?30:60}" r="12" fill="${sky==='evening'?'#ffcf6b':'#fff3c4'}"/>
+  <path d="M0 160 V128 H18 V110 Q30 88 42 110 V128 H58 V70 L62 58 L66 70 V128 H100 V160 Z" fill="#2c4a3b" opacity=".85"/>
+  <circle cx="62" cy="54" r="2.5" fill="#2c4a3b" opacity=".85"/>
+</svg>`;
+
+const D = 'D', F = 'F', B = 'B';
+const scenes = [
+ {short:'Bienvenue', tag:'Intro', sky:'morning',
+  board:`<p class="b-ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+   <p class="b-title">Daara Kanzoul Mouhtadine</p><p class="b-sub">Touba – Gênes · École coranique · 2026/27</p>
+   <div class="b-grid" style="--n:3"><div class="b-card"><b>Coran</b>lire et mémoriser</div><div class="b-card"><b>Valeurs</b>de l’Islam</div><div class="b-card"><b>Culture</b>d’origine</div></div>`,
+  lines:[
+   [F,'Salaam aleekum ! Moi, c’est Fallou.','!'],
+   [D,'Wa aleekum salaam ! Et moi, c’est Diarra. Aujourd’hui, on vous explique le règlement de notre Daara !'],
+   [F,'Notre école coranique s’appelle Daara Kanzoul Mouhtadine. Elle est à Gênes, pour les enfants nés ou qui grandissent en Italie.'],
+   [D,'On y apprend le Saint Coran, les valeurs de l’Islam, les droits et les devoirs du musulman… et aussi notre culture d’origine.'],
+   [F,'On étudie dans la maison de Serigne Touba, fondée par Serigne Mourtada Mbacké.'],
+   [D,'Ici, on n’apprend pas seulement à lire et à mémoriser le Coran. On apprend aussi le bon comportement, la dignité et le respect.'],
+   [F,'Notre devise : chaque enfant doit repartir avec les valeurs de l’Islam et de sa lignée spirituelle, pour les vivre partout où il va !'],
+  ]},
+ {short:'Les horaires', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">Samedi et dimanche</p><p class="b-sub">Trois groupes, trois heures chacun</p>
+   <div class="b-grid" style="--n:3"><div class="b-card">1<sup>er</sup> groupe<b>9h – 12h</b></div><div class="b-card">2<sup>e</sup> groupe<b>12h – 15h</b></div><div class="b-card">3<sup>e</sup> groupe<b>15h – 18h</b></div></div>`,
+  lines:[
+   [D,'Fallou, tu sais quand on a cours ?','?'],
+   [F,'Bien sûr ! Le samedi et le dimanche. Et il y a trois groupes.'],
+   [D,'Le premier groupe, de 9 heures à midi. Le deuxième, de midi à 15 heures. Le troisième, de 15 heures à 18 heures.'],
+   [F,'Alors vérifie bien ton groupe, pour ne pas te tromper d’heure !'],
+  ]},
+ {short:'Les retards', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">Les retards</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>15 min</b>maximum. Après : seulement si les parents ont prévenu avant.</div><div class="b-card"><b>2 retards</b>maximum par mois</div></div>
+   <p class="b-sub">8 jours de cours par mois</p>
+   <div class="cal"><span class="late">1</span><span class="late">2</span><span class="stop">3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+   <p class="b-sub">3<sup>e</sup> retard : retour à la maison, parents prévenus</p>`,
+  lines:[
+   [F,'Et si j’arrive un peu en retard ?','?'],
+   [D,'Tu as 15 minutes au maximum. Après, tu ne rentres que si tes parents ont prévenu la Daara à l’avance.'],
+   [F,'Et on a droit à combien de retards ?'],
+   [D,'Deux retards par mois, pas plus. Il n’y a que 8 jours de cours par mois : chaque leçon compte !'],
+   [F,'Et au troisième retard ?','!'],
+   [D,'L’élève est renvoyé à la maison, et ses parents sont prévenus tout de suite.'],
+   [F,'Compris ! Je me lève tôt et je prépare mon sac la veille.'],
+  ]},
+ {short:'Absences et sorties', tag:'Art. 1', sky:'noon',
+  board:`<p class="b-title">Absences et sorties anticipées</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Absence</b>Les parents préviennent la Daara <u>avant</u> le début du cours.</div>
+   <div class="b-card"><b>Partir plus tôt</b>Seulement avec l’autorisation des parents.</div></div>`,
+  lines:[
+   [D,'Et si un jour tu ne peux pas venir ?','?'],
+   [F,'Ce sont mes parents qui préviennent la Daara. Toujours avant le début du cours !'],
+   [D,'Et pour partir avant la fin, il faut l’autorisation des parents. On ne s’en va pas tout seul.'],
+  ]},
+ {short:'Pendant l’étude', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Pendant l’étude</p>
+   <ul class="b-list"><li>J’arrive, je m’assois à ma place et j’étudie à voix haute.</li><li>Je demande la permission avant de me lever.</li>
+   <li>Prière : on se prépare dans l’ordre et en silence, puis on reprend l’étude.</li><li>Garçons et filles gardent une distance appropriée.</li>
+   <li>À la fin, on sort seulement quand on y est autorisé.</li></ul>
+   <ul class="b-list no"><li>Pas de disputes, d’insultes ni de désobéissance.</li></ul>`,
+  lines:[
+   [F,'Parlons du comportement. À la Daara, on est respectueux et correct à chaque instant.'],
+   [D,'Pas de disputes, pas d’insultes, pas de désobéissance.'],
+   [F,'En arrivant, je m’assois à ma place et je commence à étudier à voix haute.'],
+   [D,'Et avant de me lever, je demande toujours la permission.'],
+   [F,'Pour la prière, on se prépare dans l’ordre et en silence. Juste après, on reprend l’étude.'],
+   [D,'Les garçons et les filles gardent une distance appropriée.'],
+   [F,'Et à la fin du cours, on sort seulement quand on nous y autorise.'],
+  ]},
+ {short:'Sur les réseaux', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Aussi sur les réseaux sociaux</p>
+   <svg class="icon" viewBox="0 0 60 80" aria-hidden="true"><rect x="8" y="2" width="44" height="76" rx="8" fill="none" stroke="#f4f1e6" stroke-width="4"/><path d="M30 52 C12 40 18 26 30 34 C42 26 48 40 30 52Z" fill="#ffe08a"/></svg>
+   <p class="b-sub">Chaque élève représente la Daara, même en ligne.<br>Comportement indigne : parents prévenus. S’il se répète : exclusion possible.</p>`,
+  lines:[
+   [D,'Attention : la Daara, on la représente aussi en ligne !','!'],
+   [F,'Même sur les réseaux sociaux ?','?'],
+   [D,'Oui. Il faut s’y comporter de façon digne. Sinon, les parents sont prévenus.'],
+   [F,'Et si ça se répète, on peut être exclu de l’école. Je ferai attention à ce que je publie.'],
+  ]},
+ {short:'La tenue', tag:'Art. 3', sky:'noon',
+  board:`<p class="b-title">La tenue : sobre et conforme à l’Islam</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Filles</b>Hijab obligatoire.<br>Pas d’ongles décorés ou longs, de faux cils, de piercings.</div>
+   <div class="b-card"><b>Garçons</b>Pantalon long, genoux couverts même assis.<br>Pas de boucles d’oreilles (même fausses) ni de colliers.</div></div>
+   <p class="b-sub">On ne se change pas à la Daara. Tenue incorrecte : retour à la maison.</p>`,
+  lines:[
+   [F,'Maintenant, la tenue. Elle doit être sobre et conforme aux principes de l’Islam.'],
+   [D,'Pour les filles, le hijab est obligatoire. On n’entre pas la tête découverte.'],
+   [D,'Et pas d’ongles décorés ou trop longs, pas de faux cils, pas de piercings.'],
+   [F,'Pour les garçons : pantalon long obligatoire, pas de short. Il doit couvrir les genoux, même assis.'],
+   [F,'Pas de boucles d’oreilles, même fausses, et pas de colliers.'],
+   [D,'On ne peut pas se changer à la Daara. Celui qui ne respecte pas la tenue est renvoyé à la maison.'],
+  ]},
+ {short:'Téléphone et matériel', tag:'Art. 4', sky:'noon',
+  board:`<p class="b-title">Téléphone et matériel</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Téléphone</b>Éteint ou en silencieux, rangé dans le sac. Utilisé en cours : confisqué et rendu aux parents.</div>
+   <div class="b-card"><b>Alxouran et Xam Xam</b>Livres et feuilles traités avec soin et ramenés à la maison.</div></div>
+   <p class="b-sub">Matériel abîmé ou oublié : les parents sont prévenus.</p>`,
+  lines:[
+   [D,'Ton téléphone, Fallou ?','?'],
+   [F,'Éteint ou en silencieux, et rangé dans mon sac !'],
+   [D,'Très bien. S’il est utilisé pendant le cours, il est confisqué, et il est rendu seulement aux parents.'],
+   [F,'Et on prend soin du matériel : les livres d’Alxouran et les feuilles de Xam Xam.'],
+   [D,'On les ramène à la maison, on ne les laisse pas à la Daara. Celui qui les abîme ou oublie ce qui est demandé, ses parents sont prévenus.'],
+  ]},
+ {short:'Ordre et propreté', tag:'Art. 5', sky:'evening',
+  board:`<p class="b-title">Ordre et propreté</p>
+   <svg class="icon" viewBox="0 0 120 50" aria-hidden="true" style="width:calc(var(--u)*12)"><rect x="2" y="40" width="116" height="6" rx="3" fill="#8a5a33"/>
+   <g fill="#ffe08a"><ellipse cx="18" cy="32" rx="12" ry="7"/><ellipse cx="42" cy="32" rx="12" ry="7"/></g>
+   <g fill="#9fd4b8"><ellipse cx="78" cy="32" rx="12" ry="7"/><ellipse cx="102" cy="32" rx="12" ry="7"/></g></svg>
+   <ul class="b-list"><li>Chaussures rangées dans l’espace prévu.</li><li>Sacs et vestes à leur place.</li><li>La Daara est la maison de tous : chacun la garde propre.</li></ul>`,
+  lines:[
+   [F,'Les chaussures, on les range bien, dans l’espace prévu.'],
+   [D,'Les sacs et les vestes aussi, aux places qui leur sont réservées.'],
+   [F,'La Daara, c’est la maison de tous. Chacun aide à la garder propre et en ordre !'],
+  ]},
+ {short:'Nouvelles aux parents', tag:'Art. 6', sky:'evening',
+  board:`<p class="b-title">Évaluations et nouvelles</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Progrès</b>en Coran et en Xam Xam</div><div class="b-card"><b>Comportement</b>en classe</div></div>
+   <p class="b-sub">Les parents sont informés régulièrement :<br>l’école et la famille avancent dans la même direction.</p>`,
+  lines:[
+   [D,'Nos parents reçoivent régulièrement des nouvelles de nos progrès et de notre comportement.'],
+   [F,'Comme ça, l’école et la famille marchent ensemble, dans la même direction.'],
+  ]},
+ {short:'Les sanctions', tag:'Art. 7', sky:'evening',
+  board:`<p class="b-title">Si on ne respecte pas les règles</p>
+   <div class="steps"><div style="height:calc(var(--u)*7)"><b>1</b>Rappel de l’enseignant</div><div style="height:calc(var(--u)*9)"><b>2</b>Parents prévenus</div><div style="height:calc(var(--u)*11)"><b>3</b>Suspension ou exclusion<br>(fautes graves ou répétées)</div></div>
+   <p class="b-sub">Devoirs non faits ou leçon mal mémorisée : on reste jusqu’à réciter correctement.</p>`,
+  lines:[
+   [F,'Et si quelqu’un ne respecte pas les règles ?','?'],
+   [D,'Ça se passe par étapes. D’abord, un rappel à l’ordre de l’enseignant.'],
+   [F,'Ensuite, on prévient les parents.'],
+   [D,'Et pour les fautes graves ou répétées : suspension ou exclusion.'],
+   [F,'Il y a aussi les devoirs : les leçons de Xam Xam à étudier à la maison, et les audios à envoyer pendant la semaine.'],
+   [D,'Celui qui ne les fait pas, ou qui n’a pas bien mémorisé, peut rester à la Daara jusqu’à ce qu’il récite tout correctement.','!'],
+   [F,'Alors on révise un petit peu chaque jour !'],
+  ]},
+ {short:'Avec nos familles', tag:'Art. 8', sky:'evening',
+  board:`<p class="b-title">Avec nos familles</p>
+   <ul class="b-list"><li>Les parents collaborent activement avec la Daara.</li><li>Ils participent aux réunions prévues.</li><li>À la maison, ils renforcent les valeurs et les leçons apprises.</li></ul>
+   <p class="b-sub">Daara Kanzoul Mouhtadine · Touba – Gênes</p>`,
+  lines:[
+   [D,'Nos parents ont un rôle très important dans notre éducation.'],
+   [F,'Ils travaillent avec la Daara, viennent aux réunions, et à la maison ils renforcent ce qu’on apprend en cours.'],
+   [D,'Voilà, vous connaissez tout le règlement !','!'],
+   [F,'Rendez-vous samedi à la Daara, inch’Allah !'],
+   [B,'Jërëjëf ! Merci de nous avoir écoutés !'],
+  ]},
+];
+
+const $ = id => document.getElementById(id);
+const stage=$('stage'), board=$('board'), ribbon=$('ribbon'), bubble=$('bubble'), btext=$('btext'), bwho=$('bwho'),
+      sub=$('subtitle'), stext=$('stext'), swho=$('swho'), boy=$('boy'), girl=$('girl'), bar=$('bar'), count=$('count');
+const NAMES={F:'Fallou',D:'Diarra',B:'Fallou et Diarra'};
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const total = scenes.reduce((n,s)=>n+s.lines.length,0);
+const tts = 'speechSynthesis' in window ? window.speechSynthesis : null;
+let S=0, L=0, shownScene=-1, playing=false, voiceOn=!!tts, token=0;
+
+stage.querySelector('.win.l').innerHTML = windowSvg('morning');
+stage.querySelector('.win.r').innerHTML = windowSvg('morning');
+if(!tts){ $('voice').hidden = true; }
+
+// chapters
+const chList=$('chapters');
+scenes.forEach((s,i)=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<button class="chip" type="button" id="ch${i}"><small>${s.tag}</small><span>${s.short}</span></button>`;
+  li.firstChild.addEventListener('click',()=>{S=i;L=0;show();});
+  chList.appendChild(li);
+});
+
+let frVoice=null;
+function pickVoice(){ if(!tts) return; const v=tts.getVoices().filter(v=>/^fr/i.test(v.lang)); frVoice=v.find(x=>/fr-FR/i.test(x.lang))||v[0]||null; }
+if(tts){ pickVoice(); tts.onvoiceschanged=pickVoice; }
+
+function renderScene(){
+  const s=scenes[S];
+  ribbon.textContent = s.tag==='Intro' ? 'Bienvenue à la Daara' : `${s.tag} · ${s.short}`;
+  board.innerHTML=s.board;
+  board.classList.remove('swap'); void board.offsetWidth; board.classList.add('swap');
+  stage.querySelectorAll('.win').forEach(w=>w.innerHTML=windowSvg(s.sky));
+  scenes.forEach((_,i)=>$('ch'+i).setAttribute('aria-current', i===S?'true':'false'));
+  shownScene=S;
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function speak(text,who){
+  return new Promise(res=>{
+    if(!voiceOn||!tts){ return res(false); }
+    tts.cancel();
+    const u=new SpeechSynthesisUtterance(text.replace(/Jërëjëf/g,'Diéré-diéf').replace(/Xam Xam/g,'Ram Ram'));
+    u.lang='fr-FR'; if(frVoice) u.voice=frVoice;
+    u.pitch = who==='D'?1.6:who==='F'?1.25:1.4; u.rate=0.98;
+    let done=false; const fin=()=>{ if(!done){done=true;res(true);} };
+    u.onend=fin; u.onerror=fin;
+    setTimeout(fin, text.length*95+5000);
+    tts.speak(u);
+  });
+}
+function setTalking(who,on){
+  boy.classList.toggle('talking', on && (who==='F'||who==='B'));
+  girl.classList.toggle('talking', on && (who==='D'||who==='B'));
+}
+function setEmote(who,e){
+  $('emoteF').textContent = who==='F'&&e?e:''; $('emoteF').classList.toggle('on', !!(who==='F'&&e));
+  $('emoteD').textContent = who==='D'&&e?e:''; $('emoteD').classList.toggle('on', !!(who==='D'&&e));
+}
+function updateProgress(){
+  let n=0; for(let i=0;i<S;i++) n+=scenes[i].lines.length; n+=L+1;
+  bar.style.width=(n/total*100)+'%'; count.textContent=`${n} / ${total}`;
+}
+
+async function show(opts={}){
+  const my=++token;
+  if(tts) tts.cancel();
+  if(shownScene!==S) renderScene();
+  const [who,text,emote]=scenes[S].lines[L];
+  updateProgress();
+  bubble.className='bubble hide '+who+(text.length>150?' small':'');
+  sub.className='subtitle '+who;
+  bwho.textContent=swho.textContent=NAMES[who];
+  setEmote(who,emote);
+  if(opts.still){ btext.textContent=stext.textContent=text; bubble.classList.remove('hide'); return; }
+  await wait(60); if(my!==token) return;
+  bubble.classList.remove('hide');
+  setTalking(who,true);
+  const spoken=speak(text,who);
+  if(reduce){ btext.textContent=stext.textContent=text; }
+  else{
+    for(let i=1;i<=text.length;i++){
+      if(my!==token) return;
+      btext.textContent=stext.textContent=text.slice(0,i);
+      await wait(30);
+    }
+  }
+  const usedVoice=await spoken; if(my!==token) return;
+  setTalking(who,false);
+  if(!usedVoice) await wait(900+text.length*40);
+  else await wait(500);
+  if(my!==token||!playing) return;
+  advance();
+}
+function advance(){
+  if(L<scenes[S].lines.length-1){L++;}
+  else if(S<scenes.length-1){S++;L=0;}
+  else { setPlaying(false); return; }
+  show();
+}
+function back(){
+  if(L>0){L--;} else if(S>0){S--;L=scenes[S].lines.length-1;} show();
+}
+function setPlaying(p){
+  playing=p;
+  $('playLabel').textContent=p?'Pause':(S===scenes.length-1&&L===scenes[S].lines.length-1?'Revoir':'Lecture');
+  $('playIcon').innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';
+  if(!p){ token++; if(tts) tts.cancel(); setTalking('',false); }
+}
+function play(){
+  $('start').hidden=true;
+  if(!playing && S===scenes.length-1 && L===scenes[S].lines.length-1){S=0;L=0;}
+  setPlaying(true); show();
+}
+$('start').addEventListener('click',play);
+$('play').addEventListener('click',()=> playing?setPlaying(false):play());
+$('next').addEventListener('click',()=>{ $('start').hidden=true; advance(); });
+$('prev').addEventListener('click',()=>{ $('start').hidden=true; back(); });
+$('voice').addEventListener('click',e=>{ voiceOn=!voiceOn; e.currentTarget.setAttribute('aria-pressed',voiceOn); if(!voiceOn&&tts) tts.cancel(); });
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('button')&&e.key===' ') return;
+  if(e.key==='ArrowRight'){ $('start').hidden=true; advance(); }
+  else if(e.key==='ArrowLeft'){ $('start').hidden=true; back(); }
+});
+
+show({still:true});
+})();
+</script>
