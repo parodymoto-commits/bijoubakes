@@ -43,7 +43,7 @@ await page.clock.runFor(300);
 
 const silent = path.join(tmp, 'video.mp4');
 const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
-  '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-r', String(FPS), silent], { stdio: ['pipe', 'inherit', 'inherit'] });
+  '-c:v', 'libx264', '-preset', 'medium', '-crf', '23', '-pix_fmt', 'yuv420p', '-r', String(FPS), silent], { stdio: ['pipe', 'inherit', 'inherit'] });
 
 await page.evaluate(() => window.__startVideo());
 const stepAnimations = dt => {
@@ -62,7 +62,8 @@ for (;;) {
   frame++;
   if (frame % (FPS * 10) === 0) console.log(`${frame / FPS}s`);
   if (frame / FPS >= maxSeconds || await page.evaluate(() => !!window.__done)) break;
-  await page.clock.runFor(DT);
+  // Advance by whole milliseconds that add up exactly to frame/FPS seconds (33, 33, 34, ...).
+  await page.clock.runFor(Math.round((frame) * DT) - Math.round((frame - 1) * DT));
 }
 const timeline = await page.evaluate(() => window.__timeline);
 await browser.close();

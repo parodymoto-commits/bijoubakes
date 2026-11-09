@@ -226,6 +226,7 @@ function gesture(who,e){
 async function card(html,ms){ const c=$('card'); c.innerHTML=html; c.classList.add('on'); await wait(ms); c.classList.remove('on'); await wait(400); }
 
 async function run(){
+  window.__runs=(window.__runs||0)+1;
   let n=0;
   for(let si=0; si<scenes.length; si++){
     const sc=scenes[si];
@@ -251,7 +252,7 @@ async function run(){
   }
   setShot(null); $('headline').classList.add('hide');
   await card(`Jërëjëf!<small>Daara Kanzoul Mouhtadine · Touba – Genova<br>Anno scolastico 2026/27</small>`, 3500);
-  window.__done=true;
+  window.__doneAt=Date.now()-window.__t0; window.__done=true;
 }
 buildBackground();
 setShot(null);
