@@ -98,6 +98,35 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
 .boy .gesture{--a:-14deg}.girl .gesture{--a:14deg}
 @keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--a))}}
 .talking .bob{animation-duration:1.4s}
+/* richer motion: head nods, second arm, walking, jumping, thinking, waving */
+.head,.arm2,.leg{transform-box:fill-box}
+.head{transform-origin:50% 100%}
+.girl .head{transform-box:view-box;transform-origin:100px 185px}
+.talking .head{animation:nod 1.3s ease-in-out infinite}
+.girl.talking .head{animation-delay:-.4s}
+@keyframes nod{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg) translateY(-1%)}70%{transform:rotate(3deg)}}
+.arm2{transform-origin:50% 6%}
+.talking .arm2{animation:wave2 1.7s ease-in-out infinite}
+@keyframes wave2{0%,100%{transform:rotate(0)}50%{transform:rotate(16deg)}}
+.leg{transform-origin:50% 0}
+.char.boy.away{transform:translateX(-140%)}.char.girl.away{transform:translateX(140%)}
+.char.walk{animation:walkInL 1.5s cubic-bezier(.2,.7,.3,1) both}
+.char.girl.walk{animation-name:walkInR}
+@keyframes walkInL{from{transform:translateX(-140%)}to{transform:none}}
+@keyframes walkInR{from{transform:translateX(140%)}to{transform:none}}
+.walk .leg.l{animation:step .3s ease-in-out 5 alternate}
+.walk .leg.r{animation:step .3s ease-in-out 5 alternate-reverse}
+.walk .bob{animation:hop .3s ease-in-out 5 alternate}
+@keyframes step{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+@keyframes hop{from{transform:translateY(0)}to{transform:translateY(-2.5%)}}
+.char svg.jump{animation:jump .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes jump{0%,100%{transform:translateY(0)}35%{transform:translateY(-12%) scale(1.03,.97)}60%{transform:translateY(0) scale(1.04,.94)}}
+.char.think .gesture{animation:scratch .5s ease-in-out infinite alternate}
+.boy.think .gesture{--s1:148deg;--s2:160deg}.girl.think .gesture{--s1:-148deg;--s2:-160deg}
+@keyframes scratch{from{transform:rotate(var(--s1))}to{transform:rotate(var(--s2))}}
+.char.bye .gesture{animation:bye .45s ease-in-out infinite alternate}
+.boy.bye .gesture{--b1:-140deg;--b2:-170deg}.girl.bye .gesture{--b1:140deg;--b2:170deg}
+@keyframes bye{from{transform:rotate(var(--b1))}to{transform:rotate(var(--b2))}}
 .emote{position:absolute;left:50%;top:-9%;transform:translateX(-50%) scale(0);font-family:var(--display);font-weight:800;
   font-size:4.2cqw;line-height:1;color:#d4553f;text-shadow:0 .3cqw 0 #fff;transition:transform .25s cubic-bezier(.3,1.8,.6,1)}
 .emote.on{transform:translateX(-50%) scale(1)}
@@ -179,7 +208,7 @@ html.video .stage .subtitle.F .who,html.video .stage .subtitle.B .who{color:#1f7
 html.video .stage .subtitle.D .who{color:#8e3b6e}
 html.video .subtitle.hide{opacity:0}
 @media (prefers-reduced-motion:reduce){
-  .bob,.eyes,.talking .gesture,.talking .mouth-open,.board.swap{animation:none}
+  .bob,.eyes,.talking .gesture,.talking .mouth-open,.board.swap,.talking .head,.talking .arm2,.char.walk,.walk .leg,.char svg.jump,.char.think .gesture,.char.bye .gesture{animation:none}
 }
 </style>
 
@@ -201,17 +230,16 @@ html.video .subtitle.hide{opacity:0}
       <svg viewBox="0 0 200 340">
         <g class="bob">
           <ellipse cx="100" cy="332" rx="62" ry="8" fill="rgba(0,0,0,.22)"/>
-          <rect x="72" y="238" width="25" height="86" rx="9" fill="#2b3550"/>
-          <rect x="103" y="238" width="25" height="86" rx="9" fill="#2b3550"/>
-          <ellipse cx="84" cy="326" rx="19" ry="8" fill="#3a2a20"/>
-          <ellipse cx="117" cy="326" rx="19" ry="8" fill="#3a2a20"/>
-          <g><rect x="44" y="150" width="24" height="84" rx="12" fill="#25915f"/><circle cx="56" cy="236" r="11" fill="#7a4a2b"/></g>
+          <g class="leg l"><rect x="72" y="238" width="25" height="86" rx="9" fill="#2b3550"/><ellipse cx="84" cy="326" rx="19" ry="8" fill="#3a2a20"/></g>
+          <g class="leg r"><rect x="103" y="238" width="25" height="86" rx="9" fill="#2b3550"/><ellipse cx="117" cy="326" rx="19" ry="8" fill="#3a2a20"/></g>
+          <g class="arm2"><rect x="44" y="150" width="24" height="84" rx="12" fill="#25915f"/><circle cx="56" cy="236" r="11" fill="#7a4a2b"/></g>
           <path d="M58 152 Q100 136 142 152 L152 262 Q100 276 48 262 Z" fill="#25915f"/>
           <path d="M84 146 L100 176 L116 146" fill="none" stroke="#e8c15a" stroke-width="5" stroke-linejoin="round"/>
           <path d="M100 178 L100 226" stroke="#e8c15a" stroke-width="3" stroke-dasharray="4 5"/>
           <path d="M54 250 Q100 262 146 250" fill="none" stroke="#e8c15a" stroke-width="3"/>
           <g class="gesture"><rect x="132" y="150" width="24" height="84" rx="12" fill="#25915f"/><circle cx="144" cy="236" r="11" fill="#7a4a2b"/></g>
           <rect x="89" y="128" width="22" height="22" rx="6" fill="#6c3f24"/>
+          <g class="head">
           <circle cx="48" cy="98" r="10" fill="#7a4a2b"/><circle cx="152" cy="98" r="10" fill="#7a4a2b"/>
           <circle cx="100" cy="94" r="52" fill="#7a4a2b"/>
           <path d="M50 76 C52 34 148 34 150 76 Q100 66 50 76 Z" fill="#fbfaf5"/>
@@ -227,6 +255,7 @@ html.video .subtitle.hide{opacity:0}
           <circle cx="68" cy="116" r="7" fill="#c0614a" opacity=".35"/><circle cx="132" cy="116" r="7" fill="#c0614a" opacity=".35"/>
           <path class="mouth-closed" d="M86 122 Q100 134 114 122" fill="none" stroke="#2a1a10" stroke-width="3.5" stroke-linecap="round"/>
           <g class="mouth-open"><ellipse cx="100" cy="126" rx="11" ry="9" fill="#5a1d1d"/><ellipse cx="100" cy="131" rx="6" ry="3.5" fill="#d9636b"/></g>
+          </g>
         </g>
       </svg>
     </div>
@@ -236,16 +265,18 @@ html.video .subtitle.hide{opacity:0}
       <svg viewBox="0 0 200 340">
         <g class="bob">
           <ellipse cx="100" cy="332" rx="64" ry="8" fill="rgba(0,0,0,.22)"/>
-          <ellipse cx="82" cy="326" rx="17" ry="7" fill="#3a2a20"/><ellipse cx="118" cy="326" rx="17" ry="7" fill="#3a2a20"/>
+          <g class="leg l"><ellipse cx="82" cy="326" rx="17" ry="7" fill="#3a2a20"/></g><g class="leg r"><ellipse cx="118" cy="326" rx="17" ry="7" fill="#3a2a20"/></g>
           <path d="M56 160 Q100 146 144 160 L162 320 Q100 332 38 320 Z" fill="#2f6f9a"/>
           <path d="M60 300 Q100 310 140 300" fill="none" stroke="#e8c15a" stroke-width="3"/>
-          <g class="gesture"><rect x="44" y="158" width="24" height="82" rx="12" fill="#2f6f9a"/><circle cx="56" cy="242" r="11" fill="#6e4127"/></g>
+          <g class="head">
           <path d="M100 24 C38 24 32 92 40 132 Q46 180 72 190 L128 190 Q154 180 160 132 C168 92 162 24 100 24 Z" fill="#8e3b6e"/>
           <path d="M70 186 Q100 200 130 186" fill="none" stroke="#6f2c55" stroke-width="3"/>
+          </g>
           <g><rect x="132" y="158" width="24" height="70" rx="12" fill="#2f6f9a" transform="rotate(28 144 164)"/></g>
           <rect x="96" y="196" width="40" height="30" rx="4" fill="#1f7a53" transform="rotate(-8 116 211)"/>
           <rect x="102" y="201" width="28" height="20" rx="2" fill="none" stroke="#e8c15a" stroke-width="2" transform="rotate(-8 116 211)"/>
           <circle cx="118" cy="226" r="10" fill="#6e4127"/>
+          <g class="head">
           <ellipse cx="100" cy="100" rx="40" ry="45" fill="#6e4127"/>
           <path d="M58 92 C58 48 142 48 142 92 C132 64 68 64 58 92 Z" fill="#a24a80"/>
           <path d="M72 84 Q81 79 90 84 M110 84 Q119 79 128 84" fill="none" stroke="#2a1a10" stroke-width="3" stroke-linecap="round"/>
@@ -259,6 +290,8 @@ html.video .subtitle.hide{opacity:0}
           <circle cx="70" cy="118" r="6.5" fill="#c0614a" opacity=".35"/><circle cx="130" cy="118" r="6.5" fill="#c0614a" opacity=".35"/>
           <path class="mouth-closed" d="M88 125 Q100 135 112 125" fill="none" stroke="#2a1a10" stroke-width="3.2" stroke-linecap="round"/>
           <g class="mouth-open"><ellipse cx="100" cy="128" rx="10" ry="8.5" fill="#5a1d1d"/><ellipse cx="100" cy="132.5" rx="5.5" ry="3.2" fill="#d9636b"/></g>
+          </g>
+          <g class="gesture"><rect x="44" y="158" width="24" height="82" rx="12" fill="#2f6f9a"/><circle cx="56" cy="242" r="11" fill="#6e4127"/></g>
         </g>
       </svg>
     </div>
@@ -696,6 +729,17 @@ function setTalking(who,on){
   boy.classList.toggle('talking', on && (who==='F'||who==='B'));
   girl.classList.toggle('talking', on && (who==='D'||who==='B'));
 }
+function walkIn(){
+  [boy,girl].forEach(c=>{ c.classList.remove('walk','away'); void c.offsetWidth; c.classList.add('walk'); });
+  return wait(1550).then(()=>[boy,girl].forEach(c=>c.classList.remove('walk')));
+}
+function setGesture(who,e){
+  const c = who==='F'?boy:who==='D'?girl:null;
+  [boy,girl].forEach(x=>{ x.classList.remove('think'); x.classList.toggle('bye', who==='B'); });
+  if(!c||!e) return;
+  if(e==='?') c.classList.add('think');
+  if(e==='!'){ const sv=c.querySelector('svg'); sv.classList.remove('jump'); void sv.offsetWidth; sv.classList.add('jump'); }
+}
 function setEmote(who,e){
   $('emoteF').textContent = who==='F'&&e?e:''; $('emoteF').classList.toggle('on', !!(who==='F'&&e));
   $('emoteD').textContent = who==='D'&&e?e:''; $('emoteD').classList.toggle('on', !!(who==='D'&&e));
@@ -714,11 +758,16 @@ async function show(opts={}){
   if(VIDEO && newScene && !opts.still){
     const sc=scenes[S], vc=$('vcard');
     vc.innerHTML = sc.tag==='Intro' ? `${T.welcome}<small>Daara Kanzoul Mouhtadine · ${T.city}</small>` : `${sc.short}<small>${T.rule} · ${sc.tag}</small>`;
-    btext.textContent=stext.textContent=''; sub.classList.add('hide');
-    vc.classList.add('on'); await wait(1900); if(my!==token) return;
+    vc.classList.add('on'); await wait(400); if(my!==token) return;
+    [boy,girl].forEach(c=>c.classList.add('away'));
+    await wait(1500); if(my!==token) return;
     vc.classList.remove('on'); await wait(450); if(my!==token) return;
   }
-  sub.classList.remove('hide');
+  if(newScene && !opts.still){
+    btext.textContent=stext.textContent=''; sub.classList.add('hide'); bubble.classList.add('hide'); setEmote('',null);
+    await walkIn(); if(my!==token) return;
+  }
+  setGesture(who, opts.still?null:emote);
   updateProgress();
   bubble.className='bubble hide '+who+(text.length>150?' small':'');
   sub.className='subtitle '+who;
