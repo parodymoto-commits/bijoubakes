@@ -256,7 +256,7 @@ header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
   </div>
 
   <ol class="chapters" id="chapters"></ol>
-  <p class="note">Les voix utilisent la synthèse vocale française de votre appareil. Sans voix, les répliques défilent seules au rythme de la lecture.</p>
+  <p class="note">Voix enregistrées. Si le son ne démarre pas, touchez « Lecture » : les navigateurs n’autorisent le son qu’après un geste de votre part.</p>
 </div>
 
 <script>
@@ -425,7 +425,6 @@ let S=0, L=0, shownScene=-1, playing=false, voiceOn=!!tts, token=0;
 
 stage.querySelector('.win.l').innerHTML = windowSvg('morning');
 stage.querySelector('.win.r').innerHTML = windowSvg('morning');
-if(!tts){ $('voice').hidden = true; }
 
 // chapters
 const chList=$('chapters');
@@ -450,7 +449,27 @@ function renderScene(){
   shownScene=S;
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function speak(text,who){
+// Recorded voices: audio/s{scene}-{line}.mp3 (both children: -F and -D files played together).
+let current=[];
+function stopAudio(){ current.forEach(a=>{a.pause();a.src='';}); current=[]; }
+function playFile(src){
+  return new Promise((res,rej)=>{
+    const a=new Audio(src); current.push(a);
+    a.onended=()=>res(true); a.onerror=()=>rej(new Error('missing'));
+    a.play().catch(rej);
+  });
+}
+async function speak(text,who){
+  if(!voiceOn) return false;
+  stopAudio();
+  const base=`audio/s${S}-${L}`;
+  try{
+    if(who==='B') await Promise.all([playFile(base+'-F.mp3'),playFile(base+'-D.mp3')]);
+    else await playFile(base+'.mp3');
+    return true;
+  }catch(e){ stopAudio(); return speakSynth(text,who); }
+}
+function speakSynth(text,who){
   return new Promise(res=>{
     if(!voiceOn||!tts){ return res(false); }
     tts.cancel();
@@ -478,7 +497,7 @@ function updateProgress(){
 
 async function show(opts={}){
   const my=++token;
-  if(tts) tts.cancel();
+  if(tts) tts.cancel(); stopAudio();
   if(shownScene!==S) renderScene();
   const [who,text,emote]=scenes[S].lines[L];
   updateProgress();
@@ -519,7 +538,7 @@ function setPlaying(p){
   playing=p;
   $('playLabel').textContent=p?'Pause':(S===scenes.length-1&&L===scenes[S].lines.length-1?'Revoir':'Lecture');
   $('playIcon').innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';
-  if(!p){ token++; if(tts) tts.cancel(); setTalking('',false); }
+  if(!p){ token++; if(tts) tts.cancel(); stopAudio(); setTalking('',false); }
 }
 function play(){
   $('start').hidden=true;
@@ -530,7 +549,7 @@ $('start').addEventListener('click',play);
 $('play').addEventListener('click',()=> playing?setPlaying(false):play());
 $('next').addEventListener('click',()=>{ $('start').hidden=true; advance(); });
 $('prev').addEventListener('click',()=>{ $('start').hidden=true; back(); });
-$('voice').addEventListener('click',e=>{ voiceOn=!voiceOn; e.currentTarget.setAttribute('aria-pressed',voiceOn); if(!voiceOn&&tts) tts.cancel(); });
+$('voice').addEventListener('click',e=>{ voiceOn=!voiceOn; e.currentTarget.setAttribute('aria-pressed',voiceOn); if(!voiceOn){ if(tts) tts.cancel(); stopAudio(); } });
 document.addEventListener('keydown',e=>{
   if(e.target.closest('button')&&e.key===' ') return;
   if(e.key==='ArrowRight'){ $('start').hidden=true; advance(); }
