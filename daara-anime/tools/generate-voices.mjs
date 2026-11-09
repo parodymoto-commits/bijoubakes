@@ -18,13 +18,12 @@ const force = process.argv.includes('--force');
 const outDir = path.join(root, 'audio', lang);
 fs.mkdirSync(outDir, { recursive: true });
 
-// Make names and Wolof words sound right.
-const spoken = t => t
-  .replace(/Jërëjëf/g, 'Djeuré-djeuf')
-  .replace(/Xam Xam/g, 'Khame Khame')
-  .replace(/Alxouran/g, 'Al-Khourane')
-  .replace(/inch’Allah/g, 'inchallah')
-  .replace(/Daara/g, 'Dara');
+// Make names and Wolof words sound right in each language.
+const FIX = {
+  it: [[/Jërëjëf/g, 'Gerè-gef'], [/Xam Xam/g, 'Kham Kham'], [/Alxouran/g, 'Al Khurán']],
+  fr: [[/Jërëjëf/g, 'Djeuré-djeuf'], [/Xam Xam/g, 'Khame Khame'], [/Alxouran/g, 'Al-Khourane'], [/inch’Allah/g, 'inchallah']],
+};
+const spoken = t => FIX[lang].reduce((s, [re, to]) => s.replace(re, to), t);
 
 async function tts(text, voice, prev, next) {
   const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_96`, {
