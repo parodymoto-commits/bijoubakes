@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=540,height=960">
+<title>Daara video 3D</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Video-only stage, 540x960 CSS px rendered at 2x. Two image layers cross-fade; each shot drifts (zoom/pan). */
+:root{--display:"Baloo 2","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:540px;height:960px;overflow:hidden;background:#000}
+#stage{position:relative;width:540px;height:960px;overflow:hidden}
+.layer{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}
+.layer.on{opacity:1}
+.layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:var(--ox,50%) var(--oy,40%)}
+.layer.cam img{animation:cam var(--dur,6s) linear both}
+@keyframes cam{from{transform:translate(var(--x0,0),var(--y0,0)) scale(var(--s0,1.05))}to{transform:translate(var(--x1,0),var(--y1,0)) scale(var(--s1,1.15))}}
+.shade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(rgba(0,0,0,.28),transparent 22%,transparent 62%,rgba(0,0,0,.55))}
+#headline{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:84%;z-index:5;background:#fff;color:#111;border-radius:22px;
+  padding:12px 18px 10px;text-align:center;font-family:var(--display);font-weight:800;font-size:27px;line-height:1.12;text-transform:uppercase;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);text-wrap:balance;transition:opacity .3s}
+#headline.hide{opacity:0}
+#sub{position:absolute;left:5%;right:5%;bottom:64px;z-index:6;text-align:center;font-family:var(--display);font-weight:800;font-size:28px;line-height:1.18;
+  color:#fff;-webkit-text-stroke:5px #111;paint-order:stroke fill;text-wrap:balance}
+#sub .who{display:block;font-size:20px;margin-bottom:2px;-webkit-text-stroke:4px #111}
+#sub.F .who,#sub.B .who{color:#7fe0ad}#sub.D .who{color:#f7a6d6}
+#card{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 40px;
+  background:#000;color:#fff;font-family:var(--display);font-weight:800;font-size:46px;line-height:1.1;opacity:0;transition:opacity .35s}
+#card small{font-weight:600;font-size:22px;opacity:.75;margin-top:12px}
+#card.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="L0"><img alt=""></div>
+  <div class="layer" id="L1"><img alt=""></div>
+  <div class="shade"></div>
+  <div id="headline" class="hide"></div>
+  <div id="sub"></div>
+  <div id="card"></div>
+</div>
+<script>
+const D='D', F='F', B='B';
+{{SCENES}}
+const scenes = scenes_it;
+const HEAD = [
+  'Benvenuti alla Daara Kanzoul Mouhtadine!','Sabato e domenica: 9–12 · 12–15 · 15–18','Massimo 15 minuti e 2 ritardi al mese!',
+  'Assenze? Avvisano i genitori, prima!','In classe: rispetto, ordine e studio','La Daara si rappresenta anche online',
+  'Abbigliamento sobrio e conforme all’Islam','Cellulare spento, materiale con cura','La Daara è la casa di tutti',
+  'Scuola e famiglia, insieme','Richiamo, genitori, sospensione','I genitori collaborano con la Daara',
+];
+/* Images: A surprised Fallou · R the two reading · C class with teacher · I entrance · H Diarra raising her hand */
+const IMG = {A:'img3d/fallou-sorpreso.jpg', R:'img3d/lettura.jpg', C:'img3d/classe.jpg', I:'img3d/ingresso.jpg', H:'img3d/diarra-mano.jpg'};
+const SHOTS = [
+  'IICRRRR', 'IICC', 'AHAHAHR', 'HRH', 'CRCHCCI', 'HAHR', 'IHHIIH', 'HAHRR', 'III', 'CR', 'AHAHRHR', 'CRHIR',
+];
+/* Where to frame each image when zooming in (focus point, in %) */
+const FOCUS = {A:[50,38], R:[50,62], C:[50,58], I:[50,50], H:[32,48]};
+const NAMES = {F:'Fallou', D:'Diarra', B:'Fallou e Diarra'};
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+let front = 0, current = null, n = 0;
+function shot(key, dur){
+  const moves = [
+    {s0:1.04,s1:1.16,x0:'0px',x1:'0px',y0:'0px',y1:'0px'},
+    {s0:1.18,s1:1.08,x0:'0px',x1:'0px',y0:'0px',y1:'0px'},
+    {s0:1.12,s1:1.12,x0:'-18px',x1:'18px',y0:'0px',y1:'0px'},
+    {s0:1.12,s1:1.12,x0:'18px',x1:'-18px',y0:'0px',y1:'0px'},
+    {s0:1.06,s1:1.2,x0:'0px',x1:'0px',y0:'10px',y1:'-10px'},
+  ];
+  const m = moves[n++ % moves.length];
+  const same = current === key;
+  const L = same ? $('L'+front) : $('L'+(1-front));
+  const img = L.querySelector('img');
+  if(!same){ img.src = IMG[key]; }
+  img.style.setProperty('--ox', FOCUS[key][0]+'%'); img.style.setProperty('--oy', FOCUS[key][1]+'%');
+  for(const k in m) L.style.setProperty('--'+k, m[k]);
+  L.style.setProperty('--dur', (dur/1000).toFixed(2)+'s');
+  L.classList.remove('cam'); void L.offsetWidth; L.classList.add('cam');
+  if(!same){ $('L'+front).classList.remove('on'); L.classList.add('on'); front = 1-front; current = key; }
+}
+async function card(html, ms){ const c=$('card'); c.innerHTML=html; c.classList.add('on'); await wait(ms); c.classList.remove('on'); await wait(400); }
+
+async function run(){
+  for(let si=0; si<scenes.length; si++){
+    const sc = scenes[si];
+    $('sub').textContent=''; $('headline').classList.add('hide');
+    await card(si===0 ? `Il regolamento della Daara<small>Daara Kanzoul Mouhtadine · Touba – Genova</small>` : `${sc.short}<small>Regolamento · ${sc.tag}</small>`, si===0?2600:1800);
+    $('headline').textContent = HEAD[si]; $('headline').classList.remove('hide');
+    for(let li=0; li<sc.lines.length; li++){
+      const [who, text] = sc.lines[li];
+      const base=`audio/it/s${si}-${li}`, files = who==='B'?[base+'-F.mp3',base+'-D.mp3']:[base+'.mp3'];
+      const dur = Math.max(...files.map(f => window.__durations[f] || 2500));
+      shot(SHOTS[si][li] || 'C', dur + 900);
+      if(li===0) await wait(500);
+      await wait(250);
+      window.__timeline.push({t: Date.now()-window.__t0, files});
+      const s=$('sub'); s.className=who; s.innerHTML=`<span class="who">${NAMES[who]}</span>${text}`;
+      await wait(dur);
+      await wait(350);
+      s.textContent='';
+    }
+  }
+  $('headline').classList.add('hide');
+  await card(`Jërëjëf!<small>Daara Kanzoul Mouhtadine · Touba – Genova<br>Anno scolastico 2026/27</small>`, 3500);
+  window.__doneAt = Date.now()-window.__t0; window.__done = true;
+}
+window.__timeline=[]; window.__durations=window.__durations||{};
+window.__startVideo=()=>{ window.__t0=Date.now(); run(); };
+</script>
+</body>
+</html>

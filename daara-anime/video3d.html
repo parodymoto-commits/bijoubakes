@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=540,height=960">
+<title>Daara video 3D</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Video-only stage, 540x960 CSS px rendered at 2x. Two image layers cross-fade; each shot drifts (zoom/pan). */
+:root{--display:"Baloo 2","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:540px;height:960px;overflow:hidden;background:#000}
+#stage{position:relative;width:540px;height:960px;overflow:hidden}
+.layer{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}
+.layer.on{opacity:1}
+.layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:var(--ox,50%) var(--oy,40%)}
+.layer.cam img{animation:cam var(--dur,6s) linear both}
+@keyframes cam{from{transform:translate(var(--x0,0),var(--y0,0)) scale(var(--s0,1.05))}to{transform:translate(var(--x1,0),var(--y1,0)) scale(var(--s1,1.15))}}
+.shade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(rgba(0,0,0,.28),transparent 22%,transparent 62%,rgba(0,0,0,.55))}
+#headline{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:84%;z-index:5;background:#fff;color:#111;border-radius:22px;
+  padding:12px 18px 10px;text-align:center;font-family:var(--display);font-weight:800;font-size:27px;line-height:1.12;text-transform:uppercase;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);text-wrap:balance;transition:opacity .3s}
+#headline.hide{opacity:0}
+#sub{position:absolute;left:5%;right:5%;bottom:64px;z-index:6;text-align:center;font-family:var(--display);font-weight:800;font-size:28px;line-height:1.18;
+  color:#fff;-webkit-text-stroke:5px #111;paint-order:stroke fill;text-wrap:balance}
+#sub .who{display:block;font-size:20px;margin-bottom:2px;-webkit-text-stroke:4px #111}
+#sub.F .who,#sub.B .who{color:#7fe0ad}#sub.D .who{color:#f7a6d6}
+#card{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 40px;
+  background:#000;color:#fff;font-family:var(--display);font-weight:800;font-size:46px;line-height:1.1;opacity:0;transition:opacity .35s}
+#card small{font-weight:600;font-size:22px;opacity:.75;margin-top:12px}
+#card.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="L0"><img alt=""></div>
+  <div class="layer" id="L1"><img alt=""></div>
+  <div class="shade"></div>
+  <div id="headline" class="hide"></div>
+  <div id="sub"></div>
+  <div id="card"></div>
+</div>
+<script>
+const D='D', F='F', B='B';
+const scenes_it = [
+ {short:'Benvenuti', tag:'Intro', sky:'morning',
+  board:`<p class="b-ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+   <p class="b-title">Daara Kanzoul Mouhtadine</p><p class="b-sub">Touba – Genova · Scuola coranica · 2026/27</p>
+   <div class="b-grid" style="--n:3"><div class="b-card"><b>Corano</b>leggere e memorizzare</div><div class="b-card"><b>Valori</b>dell’Islam</div><div class="b-card"><b>Cultura</b>d’origine</div></div>`,
+  lines:[
+   [F,'Salaam aleekum! Io sono Fallou.','!'],
+   [D,'Wa aleekum salaam! E io sono Diarra. Oggi vi spieghiamo il regolamento della nostra Daara!'],
+   [F,'La nostra scuola coranica si chiama Daara Kanzoul Mouhtadine, a Genova. È per i bambini nati o cresciuti in Italia.'],
+   [D,'Qui impariamo il Sacro Corano, i valori dell’Islam, i diritti e i doveri del musulmano… e anche la nostra cultura d’origine.'],
+   [F,'Studiamo nella casa di Serigne Touba, fondata da Serigne Mourtada Mbacké.'],
+   [D,'Qui non si impara soltanto a leggere e memorizzare il Corano. Si imparano anche il comportamento, la dignità e il rispetto.'],
+   [F,'Il nostro motto: ogni bambino deve uscire da questa scuola con i valori dell’Islam e del proprio lignaggio spirituale, per viverli ovunque si trovi!'],
+  ]},
+ {short:'Orari', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">Sabato e domenica</p><p class="b-sub">Tre gruppi, tre ore ciascuno</p>
+   <div class="b-grid" style="--n:3"><div class="b-card">Primo gruppo<b>9:00 – 12:00</b></div><div class="b-card">Secondo gruppo<b>12:00 – 15:00</b></div><div class="b-card">Terzo gruppo<b>15:00 – 18:00</b></div></div>`,
+  lines:[
+   [D,'Fallou, sai quando abbiamo lezione?','?'],
+   [F,'Certo! Il sabato e la domenica. E ci sono tre gruppi.'],
+   [D,'Il primo gruppo dalle 9 alle 12. Il secondo dalle 12 alle 15. Il terzo dalle 15 alle 18.'],
+   [F,'Quindi controlla bene il tuo gruppo, per non sbagliare orario!'],
+  ]},
+ {short:'Ritardi', tag:'Art. 1', sky:'morning',
+  board:`<p class="b-title">I ritardi</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>15 min</b>al massimo. Oltre: solo se i genitori hanno avvisato prima.</div><div class="b-card"><b>2 ritardi</b>al massimo al mese</div></div>
+   <p class="b-sub">8 giorni di lezione al mese</p>
+   <div class="cal"><span class="late">1</span><span class="late">2</span><span class="stop">3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+   <p class="b-sub">Al 3° ritardo: a casa, genitori avvisati subito</p>`,
+  lines:[
+   [F,'E se arrivo un po’ in ritardo?','?'],
+   [D,'Hai un margine massimo di 15 minuti. Oltre questo limite entri solo se i tuoi genitori hanno avvisato la Daara in anticipo.'],
+   [F,'E quanti ritardi si possono fare?'],
+   [D,'Massimo due ritardi al mese. Le lezioni sono solo 8 giorni al mese: ogni lezione conta!'],
+   [F,'E al terzo ritardo?','!'],
+   [D,'Lo studente viene rimandato a casa, e i genitori vengono avvisati subito.'],
+   [F,'Capito! Mi sveglio presto e preparo lo zaino la sera prima.'],
+  ]},
+ {short:'Assenze e uscite', tag:'Art. 1', sky:'noon',
+  board:`<p class="b-title">Assenze e uscite anticipate</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Assenza</b>I genitori avvisano la Daara <u>prima</u> dell’inizio della lezione.</div>
+   <div class="b-card"><b>Uscita anticipata</b>Solo con l’autorizzazione dei genitori.</div></div>`,
+  lines:[
+   [D,'E se un giorno non puoi venire?','?'],
+   [F,'Sono i miei genitori ad avvisare la Daara. Sempre prima dell’inizio della lezione!'],
+   [D,'E per uscire prima della fine serve l’autorizzazione dei genitori. Non si va via da soli.'],
+  ]},
+ {short:'Durante lo studio', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Durante lo studio</p>
+   <ul class="b-list"><li>All’arrivo mi siedo al mio posto e studio ad alta voce.</li><li>Chiedo il permesso prima di alzarmi.</li>
+   <li>Preghiera: ci si prepara con ordine e in silenzio, poi si riprende lo studio.</li><li>Maschi e femmine mantengono una distanza appropriata.</li>
+   <li>Alla fine si esce solo quando si è autorizzati.</li></ul>
+   <ul class="b-list no"><li>Niente litigi, insulti o disobbedienza.</li></ul>`,
+  lines:[
+   [F,'Parliamo del comportamento. Alla Daara si è rispettosi e corretti in ogni momento.'],
+   [D,'Niente litigi, niente insulti, niente disobbedienza.'],
+   [F,'Quando arrivo, mi siedo al mio posto e comincio a studiare ad alta voce.'],
+   [D,'E prima di alzarmi, chiedo sempre il permesso.'],
+   [F,'Per la preghiera ci si prepara con ordine e in silenzio. Subito dopo si riprende lo studio.'],
+   [D,'Maschi e femmine mantengono una distanza appropriata.'],
+   [F,'E alla fine della lezione si esce solo quando si è autorizzati.'],
+  ]},
+ {short:'Sui social', tag:'Art. 2', sky:'noon',
+  board:`<p class="b-title">Anche sui social</p>
+   <svg class="icon" viewBox="0 0 60 80" aria-hidden="true"><rect x="8" y="2" width="44" height="76" rx="8" fill="none" stroke="#f4f1e6" stroke-width="4"/><path d="M30 52 C12 40 18 26 30 34 C42 26 48 40 30 52Z" fill="#ffe08a"/></svg>
+   <p class="b-sub">Ogni studente rappresenta la Daara, anche online.<br>Comportamenti scorretti: segnalati ai genitori. Se ripetuti: possibile esclusione.</p>`,
+  lines:[
+   [D,'Attenzione: la Daara la rappresentiamo anche online!','!'],
+   [F,'Anche sui social?','?'],
+   [D,'Sì. Bisogna comportarsi in modo degno. Altrimenti viene segnalato ai genitori.'],
+   [F,'E se succede di nuovo, si può essere esclusi dalla scuola. Starò attento a quello che pubblico.'],
+  ]},
+ {short:'Abbigliamento', tag:'Art. 3', sky:'noon',
+  board:`<p class="b-title">Abbigliamento sobrio e conforme all’Islam</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Ragazze</b>Hijab obbligatorio.<br>Niente unghie decorate o allungate, ciglia finte, piercing.</div>
+   <div class="b-card"><b>Ragazzi</b>Pantaloni lunghi, ginocchia coperte anche da seduti.<br>Niente orecchini (anche finti) né collane.</div></div>
+   <p class="b-sub">Non ci si cambia alla Daara. Abbigliamento non conforme: si torna a casa.</p>`,
+  lines:[
+   [F,'Ora l’abbigliamento. Deve essere sobrio e conforme ai principi islamici.'],
+   [D,'Per le ragazze l’hijab è obbligatorio. Non si entra con il capo scoperto.'],
+   [D,'E niente unghie decorate o allungate, niente ciglia finte, niente piercing.'],
+   [F,'Per i ragazzi: pantaloni lunghi obbligatori, niente pantaloncini. Devono coprire le ginocchia anche da seduti.'],
+   [F,'Niente orecchini, anche finti, e niente collane.'],
+   [D,'Non ci si può cambiare dentro la scuola. Chi non rispetta queste indicazioni viene rimandato a casa.'],
+  ]},
+ {short:'Cellulari e materiale', tag:'Art. 4', sky:'noon',
+  board:`<p class="b-title">Cellulari e materiale</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Cellulare</b>Spento o in silenzioso, nella borsa. Se usato a lezione: ritirato e restituito ai genitori.</div>
+   <div class="b-card"><b>Alxouran e Xam Xam</b>Libri e fogli trattati con cura e riportati a casa.</div></div>
+   <p class="b-sub">Materiale trattato male o dimenticato: segnalato ai genitori.</p>`,
+  lines:[
+   [D,'E il tuo cellulare, Fallou?','?'],
+   [F,'Spento o in silenzioso, e riposto nella borsa!'],
+   [D,'Bravo. Se viene usato durante la lezione, viene ritirato e restituito soltanto ai genitori.'],
+   [F,'E il materiale va trattato con cura: i libri di Alxouran e i fogli di Xam Xam.'],
+   [D,'Si riportano a casa, non si lasciano alla Daara. Chi li tratta male o non porta quanto richiesto viene segnalato ai genitori.'],
+  ]},
+ {short:'Ordine e pulizia', tag:'Art. 5', sky:'evening',
+  board:`<p class="b-title">Ordine e pulizia</p>
+   <svg class="icon" viewBox="0 0 120 50" aria-hidden="true" style="width:calc(var(--u)*12)"><rect x="2" y="40" width="116" height="6" rx="3" fill="#8a5a33"/>
+   <g fill="#ffe08a"><ellipse cx="18" cy="32" rx="12" ry="7"/><ellipse cx="42" cy="32" rx="12" ry="7"/></g>
+   <g fill="#9fd4b8"><ellipse cx="78" cy="32" rx="12" ry="7"/><ellipse cx="102" cy="32" rx="12" ry="7"/></g></svg>
+   <ul class="b-list"><li>Scarpe in ordine nell’apposito spazio.</li><li>Zaini e giacche negli spazi assegnati.</li><li>La Daara è la casa di tutti: ognuno la tiene pulita.</li></ul>`,
+  lines:[
+   [F,'Le scarpe si lasciano in ordine, nell’apposito spazio.'],
+   [D,'Anche zaini e giacche, negli spazi assegnati.'],
+   [F,'La Daara è la casa di tutti. Ognuno aiuta a mantenerla pulita e in ordine!'],
+  ]},
+ {short:'Notizie ai genitori', tag:'Art. 6', sky:'evening',
+  board:`<p class="b-title">Valutazioni e comunicazioni</p>
+   <div class="b-grid" style="--n:2"><div class="b-card"><b>Progressi</b>nello studio</div><div class="b-card"><b>Comportamento</b>in classe</div></div>
+   <p class="b-sub">I genitori sono aggiornati regolarmente:<br>scuola e famiglia camminano nella stessa direzione.</p>`,
+  lines:[
+   [D,'I nostri genitori vengono aggiornati regolarmente sui nostri progressi e sul nostro comportamento.'],
+   [F,'Così la scuola e la famiglia camminano insieme, nella stessa direzione.'],
+  ]},
+ {short:'Sanzioni', tag:'Art. 7', sky:'evening',
+  board:`<p class="b-title">Se non si rispettano le regole</p>
+   <div class="steps"><div style="height:calc(var(--u)*7)"><b>1</b>Richiamo dell’insegnante</div><div style="height:calc(var(--u)*9)"><b>2</b>Comunicazione ai genitori</div><div style="height:calc(var(--u)*11)"><b>3</b>Sospensione o espulsione<br>(infrazioni gravi o ripetute)</div></div>
+   <p class="b-sub">Compiti non fatti o lezione non memorizzata: si resta finché non si recita correttamente.</p>`,
+  lines:[
+   [F,'E se qualcuno non rispetta le regole?','?'],
+   [D,'Si procede per gradi. Prima, un richiamo verbale dell’insegnante.'],
+   [F,'Poi, una comunicazione ai genitori.'],
+   [D,'E per infrazioni gravi o ripetute: sospensione o espulsione.'],
+   [F,'Ci sono anche i compiti: le lezioni di Xam Xam da studiare a casa e gli audio da inviare durante la settimana.'],
+   [D,'Chi non li fa, o non ha memorizzato bene, può essere trattenuto finché non recita correttamente tutto il materiale.','!'],
+   [F,'Allora ripassiamo un pochino ogni giorno!'],
+  ]},
+ {short:'Con le famiglie', tag:'Art. 8', sky:'evening',
+  board:`<p class="b-title">Con le famiglie</p>
+   <ul class="b-list"><li>I genitori collaborano attivamente con la Daara.</li><li>Partecipano agli incontri previsti.</li><li>A casa rafforzano i valori e gli insegnamenti.</li></ul>
+   <p class="b-sub">Daara Kanzoul Mouhtadine · Touba – Genova</p>`,
+  lines:[
+   [D,'I nostri genitori hanno un ruolo fondamentale nella nostra formazione.'],
+   [F,'Collaborano con la Daara, partecipano agli incontri, e a casa rafforzano quello che impariamo a lezione.'],
+   [D,'Ecco, ora conoscete tutto il regolamento!','!'],
+   [F,'Ci vediamo sabato alla Daara, inshallah!'],
+   [B,'Jërëjëf! Grazie per averci ascoltato!'],
+  ]},
+];
+const scenes = scenes_it;
+const HEAD = [
+  'Benvenuti alla Daara Kanzoul Mouhtadine!','Sabato e domenica: 9–12 · 12–15 · 15–18','Massimo 15 minuti e 2 ritardi al mese!',
+  'Assenze? Avvisano i genitori, prima!','In classe: rispetto, ordine e studio','La Daara si rappresenta anche online',
+  'Abbigliamento sobrio e conforme all’Islam','Cellulare spento, materiale con cura','La Daara è la casa di tutti',
+  'Scuola e famiglia, insieme','Richiamo, genitori, sospensione','I genitori collaborano con la Daara',
+];
+/* Images: A surprised Fallou · R the two reading · C class with teacher · I entrance · H Diarra raising her hand */
+const IMG = {A:'img3d/fallou-sorpreso.jpg', R:'img3d/lettura.jpg', C:'img3d/classe.jpg', I:'img3d/ingresso.jpg', H:'img3d/diarra-mano.jpg'};
+const SHOTS = [
+  'IICRRRR', 'IICC', 'AHAHAHR', 'HRH', 'CRCHCCI', 'HAHR', 'IHHIIH', 'HAHRR', 'III', 'CR', 'AHAHRHR', 'CRHIR',
+];
+/* Where to frame each image when zooming in (focus point, in %) */
+const FOCUS = {A:[50,38], R:[50,62], C:[50,58], I:[50,50], H:[32,48]};
+const NAMES = {F:'Fallou', D:'Diarra', B:'Fallou e Diarra'};
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+let front = 0, current = null, n = 0;
+function shot(key, dur){
+  const moves = [
+    {s0:1.04,s1:1.16,x0:'0px',x1:'0px',y0:'0px',y1:'0px'},
+    {s0:1.18,s1:1.08,x0:'0px',x1:'0px',y0:'0px',y1:'0px'},
+    {s0:1.12,s1:1.12,x0:'-18px',x1:'18px',y0:'0px',y1:'0px'},
+    {s0:1.12,s1:1.12,x0:'18px',x1:'-18px',y0:'0px',y1:'0px'},
+    {s0:1.06,s1:1.2,x0:'0px',x1:'0px',y0:'10px',y1:'-10px'},
+  ];
+  const m = moves[n++ % moves.length];
+  const same = current === key;
+  const L = same ? $('L'+front) : $('L'+(1-front));
+  const img = L.querySelector('img');
+  if(!same){ img.src = IMG[key]; }
+  img.style.setProperty('--ox', FOCUS[key][0]+'%'); img.style.setProperty('--oy', FOCUS[key][1]+'%');
+  for(const k in m) L.style.setProperty('--'+k, m[k]);
+  L.style.setProperty('--dur', (dur/1000).toFixed(2)+'s');
+  L.classList.remove('cam'); void L.offsetWidth; L.classList.add('cam');
+  if(!same){ $('L'+front).classList.remove('on'); L.classList.add('on'); front = 1-front; current = key; }
+}
+async function card(html, ms){ const c=$('card'); c.innerHTML=html; c.classList.add('on'); await wait(ms); c.classList.remove('on'); await wait(400); }
+
+async function run(){
+  for(let si=0; si<scenes.length; si++){
+    const sc = scenes[si];
+    $('sub').textContent=''; $('headline').classList.add('hide');
+    await card(si===0 ? `Il regolamento della Daara<small>Daara Kanzoul Mouhtadine · Touba – Genova</small>` : `${sc.short}<small>Regolamento · ${sc.tag}</small>`, si===0?2600:1800);
+    $('headline').textContent = HEAD[si]; $('headline').classList.remove('hide');
+    for(let li=0; li<sc.lines.length; li++){
+      const [who, text] = sc.lines[li];
+      const base=`audio/it/s${si}-${li}`, files = who==='B'?[base+'-F.mp3',base+'-D.mp3']:[base+'.mp3'];
+      const dur = Math.max(...files.map(f => window.__durations[f] || 2500));
+      shot(SHOTS[si][li] || 'C', dur + 900);
+      if(li===0) await wait(500);
+      await wait(250);
+      window.__timeline.push({t: Date.now()-window.__t0, files});
+      const s=$('sub'); s.className=who; s.innerHTML=`<span class="who">${NAMES[who]}</span>${text}`;
+      await wait(dur);
+      await wait(350);
+      s.textContent='';
+    }
+  }
+  $('headline').classList.add('hide');
+  await card(`Jërëjëf!<small>Daara Kanzoul Mouhtadine · Touba – Genova<br>Anno scolastico 2026/27</small>`, 3500);
+  window.__doneAt = Date.now()-window.__t0; window.__done = true;
+}
+window.__timeline=[]; window.__durations=window.__durations||{};
+window.__startVideo=()=>{ window.__t0=Date.now(); run(); };
+</script>
+</body>
+</html>

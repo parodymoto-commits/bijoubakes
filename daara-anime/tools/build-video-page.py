@@ -21,3 +21,8 @@ scenes = re.search(r'const scenes_it = \[[\s\S]*?\n\];', index).group(0)
 out = tpl.replace('{{BOY}}', char_svg('boy')).replace('{{GIRL}}', char_svg('girl')).replace('{{SCENES}}', scenes)
 (root / 'video.html').write_text(out)
 print('video.html written')
+
+# 3D version: the user's own AI images, panned and zoomed, with the same script and voices.
+tpl3d = (root / 'tools' / 'video3d-template.html').read_text()
+(root / 'video3d.html').write_text(tpl3d.replace('{{SCENES}}', scenes))
+print('video3d.html written')
