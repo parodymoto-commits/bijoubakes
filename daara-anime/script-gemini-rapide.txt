@@ -1,0 +1,93 @@
+SCRIPT GEMINI RAPIDE : 6 MESSAGES, 5 IMAGES À CHAQUE FOIS
+=========================================================
+
+1. Restez dans la MÊME conversation Gemini que la première image (Fallou et Diarra).
+2. Copiez un MESSAGE entier (de « Crée 5 images » jusqu'à la fin du bloc), collez, Entrée.
+3. Si Gemini ne crée pas les 5 images, écrivez : « Continue avec l’image suivante ».
+4. Téléchargez chaque image et numérotez-la (le numéro est écrit devant chaque plan : 02, 03…).
+5. Quand vous avez tout, envoyez-moi les images dans le chat : je fais la vidéo avec les voix.
+
+Liste des voix pour chaque image (pour information) :
+
+  01.png  (plan 1A) → s0-0.mp3, s0-1.mp3
+  02.png  (plan 1B) → s0-2.mp3, s0-3.mp3
+  03.png  (plan 1C) → s0-4.mp3
+  04.png  (plan 1D) → s0-5.mp3
+  05.png  (plan 1E) → s0-6.mp3
+  06.png  (plan 2A) → s1-0.mp3, s1-1.mp3
+  07.png  (plan 2B) → s1-2.mp3, s1-3.mp3
+  08.png  (plan 3A) → s2-0.mp3
+  09.png  (plan 3B) → s2-1.mp3, s2-2.mp3, s2-3.mp3
+  10.png  (plan 3C) → s2-4.mp3, s2-5.mp3
+  11.png  (plan 3D) → s2-6.mp3
+  12.png  (plan 4A) → s3-0.mp3, s3-1.mp3, s3-2.mp3
+  13.png  (plan 5A) → s4-0.mp3, s4-1.mp3, s4-2.mp3
+  14.png  (plan 5B) → s4-3.mp3
+  15.png  (plan 5C) → s4-4.mp3
+  16.png  (plan 5D) → s4-5.mp3
+  17.png  (plan 5E) → s4-6.mp3
+  18.png  (plan 6A) → s5-0.mp3, s5-1.mp3, s5-2.mp3, s5-3.mp3
+  19.png  (plan 7A) → s6-1.mp3, s6-2.mp3
+  20.png  (plan 7B) → s6-0.mp3, s6-3.mp3, s6-4.mp3
+  21.png  (plan 7C) → s6-5.mp3
+  22.png  (plan 8A) → s7-0.mp3, s7-1.mp3, s7-2.mp3
+  23.png  (plan 8B) → s7-3.mp3, s7-4.mp3
+  24.png  (plan 9A) → s8-0.mp3, s8-1.mp3, s8-2.mp3
+  25.png  (plan 10A) → s9-0.mp3, s9-1.mp3
+  26.png  (plan 11A) → s10-0.mp3, s10-1.mp3, s10-2.mp3, s10-3.mp3
+  27.png  (plan 11B) → s10-4.mp3, s10-5.mp3, s10-6.mp3
+  28.png  (plan 12A) → s11-0.mp3, s11-1.mp3
+  29.png  (plan 12B) → s11-2.mp3, s11-3.mp3, s11-4.mp3
+
+---------------------------------------------------------- MESSAGE 1
+Crée 5 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 01: Fallou and Diarra standing side by side inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, smiling at the camera, Fallou waving hello, medium shot.
+Image 02: Wide shot inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, a group of children of different ages sitting on the carpet reading Quran books on low wooden stands, Fallou and Diarra in the front.
+Image 03: Fallou standing near an arched window inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, warm morning sunlight, speaking proudly to the camera, medium close-up.
+Image 04: Diarra holding her green Quran against her chest inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, gentle smile, medium close-up.
+Image 05: Fallou and Diarra side by side inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, both smiling with a hand on the heart, golden light, medium shot.
+
+---------------------------------------------------------- MESSAGE 2
+Crée 5 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 06: Diarra asking Fallou a question inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, Fallou counting on his fingers, friendly mood, medium two-shot.
+Image 07: Children with small backpacks arriving at the door of the daara on a sunny weekend morning, a round wall clock near the door, Fallou and Diarra in front.
+Image 08: Fallou running in a street of Genoa with his backpack, worried face, morning light, full body.
+Image 09: Diarra pointing at a round wall clock inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, explaining seriously, Fallou listening, medium shot.
+Image 10: Close-up of Fallou with a surprised face, mouth open, inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands.
+
+---------------------------------------------------------- MESSAGE 3
+Crée 5 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 11: Fallou in his bedroom at night packing his backpack with a Quran book, cozy lamp light, happy.
+Image 12: A Senegalese mother in a colorful wrap dress and head scarf making a phone call in a kitchen in the morning, Fallou standing next to her with his backpack, warm light.
+Image 13: Children sitting in rows on the carpet inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, reading Quran books aloud on low wooden stands, Fallou in the center.
+Image 14: Diarra raising her hand politely to ask permission inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, a kind teacher in a white boubou nodding in the background.
+Image 15: Children standing in a calm straight line on prayer rugs inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, peaceful and silent, soft light, seen from behind.
+
+---------------------------------------------------------- MESSAGE 4
+Crée 5 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 16: Wide shot inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, boys studying on the left side and girls in hijab studying on the right side of the room, respectful atmosphere.
+Image 17: Children calmly leaving the classroom one by one at the door of the daara while the teacher gives a signal.
+Image 18: Diarra and Fallou sitting on a sofa at home looking at a smartphone together, thoughtful expressions, cozy living room.
+Image 19: Diarra adjusting her plum hijab in front of a mirror at home before school, simple and modest, natural light.
+Image 20: Fallou sitting cross-legged on the carpet inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, his long trousers covering his knees, smiling at the camera.
+
+---------------------------------------------------------- MESSAGE 5
+Crée 5 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 21: Fallou and Diarra at the front door of their building ready for school, dressed correctly, morning light.
+Image 22: Close-up of Fallou switching off a smartphone and putting it in his backpack, Diarra watching with approval.
+Image 23: Diarra carefully placing a Quran book and paper lesson sheets into her school bag at home, gentle and careful.
+Image 24: Entrance of the daara with a neat row of children's shoes on a wooden rack, backpacks and jackets on wall hooks, Fallou placing his shoes.
+Image 25: A kind teacher in a white boubou talking with Senegalese parents at the daara entrance, Fallou and Diarra standing proudly next to them.
+
+---------------------------------------------------------- MESSAGE 6
+Crée 4 images, une par une, avec exactement les mêmes personnages Fallou et Diarra (mêmes visages, mêmes vêtements) et le même style 3D que la première image de cette conversation. Format vertical 9:16, sans aucun texte dans les images.
+
+Image 26: The teacher gently raising one finger as a warning inside a warm Quranic school (daara) in a mosque: cream walls with big arches, a green and gold mihrab, hanging golden lanterns, red prayer carpets, low wooden book stands, children listening attentively, Fallou and Diarra in front.
+Image 27: Fallou at home at a table recording himself reciting from a Quran book with a smartphone, Diarra studying lesson sheets next to him, evening lamp light.
+Image 28: A Senegalese family at home in the evening, father and mother sitting with Fallou and Diarra reading a Quran book together, warm and loving atmosphere.
+Image 29: Fallou and Diarra at the door of the daara at sunset, waving goodbye to the camera, happy, golden light.
